@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-15T09:35:33Z",
+ "generated": "2026-11-15T09:39:52Z",
  "features": {
   "t2m_c": {
    "label": "Mean 2 m temperature",
@@ -68,7 +68,7 @@
    "feature": "t2m_min_c",
    "unit": "°C",
    "zero": 0,
-   "full": -40,
+   "full": -60,
    "measure": "Coldest monthly minimum 2 m air temperature (NASA POWER T2M_MIN climatology)",
    "source": "NASA POWER T2M_MIN, T2M",
    "citation": "https://doi.org/10.1126/science.1187726"
@@ -190,7 +190,7 @@
    "feature": "precip_mm_yr",
    "unit": "mm/yr",
    "zero": 500,
-   "full": 50,
+   "full": 0,
    "measure": "Annual precipitation (NASA POWER PRECTOTCORR, mm/day x 365)",
    "source": "NASA POWER PRECTOTCORR",
    "citation": "https://doi.org/10.1126/science.1089143"
@@ -205,7 +205,7 @@
    "feature": "uv_peak",
    "unit": "UV index",
    "zero": 1.5,
-   "full": 4,
+   "full": 4.5,
    "measure": "Peak-month all-sky surface UV index (NASA POWER ALLSKY_SFC_UV_INDEX, 24 h mean)",
    "source": "NASA POWER ALLSKY_SFC_UV_INDEX",
    "citation": "https://power.larc.nasa.gov/docs/"
@@ -220,7 +220,7 @@
    "feature": "ps_kpa",
    "unit": "kPa",
    "zero": 95,
-   "full": 60,
+   "full": 50,
    "measure": "Annual mean surface pressure (NASA POWER PS)",
    "source": "NASA POWER PS",
    "citation": "https://doi.org/10.1038/s41561-022-01084-0"
@@ -236,7 +236,7 @@
    "feature": "t2m_range_c",
    "unit": "°C",
    "zero": 6,
-   "full": 16,
+   "full": 20,
    "measure": "Annual mean diurnal 2 m temperature range (NASA POWER T2M_RANGE)",
    "source": "NASA POWER T2M_RANGE",
    "citation": "https://doi.org/10.1038/s41561-022-01084-0"
@@ -290,7 +290,7 @@
    "feature": "ws10m",
    "unit": "m/s",
    "zero": 2,
-   "full": 8,
+   "full": 10,
    "measure": "Annual mean 10 m wind speed (NASA POWER WS10M)",
    "source": "NASA POWER WS10M",
    "citation": "https://doi.org/10.1038/s41561-022-01084-0"

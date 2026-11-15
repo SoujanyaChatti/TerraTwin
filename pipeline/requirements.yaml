@@ -17,7 +17,8 @@ requirements:
     feature: t2m_min_c
     unit: "°C"
     zero: 0
-    full: -40
+    full: -60
+    # tuned: PRD start 0 -> -40; full set near the coldest site in the set (-62 C) so 1.0 means Earth-extreme
     measure: Coldest monthly minimum 2 m air temperature (NASA POWER T2M_MIN climatology)
     source: NASA POWER T2M_MIN, T2M
     citation: https://doi.org/10.1126/science.1187726   # Paige et al. 2010, Diviner cold traps
@@ -91,8 +92,8 @@ requirements:
     feature: precip_mm_yr
     unit: "mm/yr"
     zero: 500
-    full: 50
-    # tuned: PRD start 250 -> 25; widened to the semi-arid boundary (validation, see README)
+    full: 0
+    # tuned: PRD start 250 -> 25; zero widened to the semi-arid boundary, full = no rain at all
     measure: Annual precipitation (NASA POWER PRECTOTCORR, mm/day x 365)
     source: NASA POWER PRECTOTCORR
     citation: https://doi.org/10.1126/science.1089143   # Navarro-Gonzalez et al. 2003, Mars-like soils
@@ -104,8 +105,8 @@ requirements:
     feature: uv_peak
     unit: "UV index"
     zero: 1.5
-    full: 4
-    # tuned: PRD start 4 -> 10; POWER UV index is a 24 h mean, Earth peak-month max is ~4.3
+    full: 4.5
+    # tuned: PRD start 4 -> 10; POWER UV index is a 24 h mean, Earth peak-month max in the set is 4.3
     measure: Peak-month all-sky surface UV index (NASA POWER ALLSKY_SFC_UV_INDEX, 24 h mean)
     source: NASA POWER ALLSKY_SFC_UV_INDEX
     citation: https://power.larc.nasa.gov/docs/
@@ -117,7 +118,8 @@ requirements:
     feature: ps_kpa
     unit: "kPa"
     zero: 95
-    full: 60
+    full: 50
+    # tuned: PRD start 95 -> 60; full set below the lowest site in the set (54 kPa)
     measure: Annual mean surface pressure (NASA POWER PS)
     source: NASA POWER PS
     citation: https://doi.org/10.1038/s41561-022-01084-0   # Rodriguez-Manfredi et al. 2023, MEDA
@@ -129,8 +131,8 @@ requirements:
     feature: t2m_range_c
     unit: "°C"
     zero: 6
-    full: 16
-    # tuned: PRD start 8 -> 20; rescaled to the Earth range in POWER T2M_RANGE (1-17 C)
+    full: 20
+    # tuned: PRD start 8 -> 20; zero lowered so polar/maritime sites (1-8 C) are separated
     measure: Annual mean diurnal 2 m temperature range (NASA POWER T2M_RANGE)
     source: NASA POWER T2M_RANGE
     citation: https://doi.org/10.1038/s41561-022-01084-0
@@ -162,7 +164,8 @@ requirements:
     feature: ws10m
     unit: "m/s"
     zero: 2
-    full: 8
+    full: 10
+    # tuned: PRD start 2 -> 8; full set near the windiest sites in the set (~11 m/s)
     measure: Annual mean 10 m wind speed (NASA POWER WS10M)
     source: NASA POWER WS10M
     citation: https://doi.org/10.1038/s41561-022-01084-0
