@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-15T09:39:52Z",
+ "generated": "2026-11-15T09:42:04Z",
  "features": {
   "t2m_c": {
    "label": "Mean 2 m temperature",
@@ -673,7 +673,7 @@
    "analog_for": "moon",
    "access_tier": 2,
    "description": "High basaltic volcano with tephra fields; site of NASA/PISCES lunar ISRU field tests in 2010 and 2012.",
-   "citation_url": "https://en.wikipedia.org/wiki/Pacific_International_Space_Center_for_Exploration_Systems",
+   "citation_url": "https://en.wikipedia.org/wiki/Mauna_Kea",
    "features": {
     "t2m_c": 20.9,
     "t2m_min_c": 12.75,
@@ -1196,7 +1196,7 @@
    "analog_for": null,
    "access_tier": 2,
    "description": "High-altitude hot springs with borax and sulfur deposits in a permafrost setting.",
-   "citation_url": "https://en.wikipedia.org/wiki/Puga_Valley",
+   "citation_url": "https://en.wikipedia.org/wiki/Geography_of_Ladakh",
    "features": {
     "t2m_c": -6.9,
     "t2m_min_c": -37.68,
@@ -2336,7 +2336,7 @@
    "analog_for": null,
    "access_tier": 3,
    "description": "Pristine 45 m iron-meteorite crater in the hyperarid Western Desert.",
-   "citation_url": "https://en.wikipedia.org/wiki/Kamil_crater",
+   "citation_url": "https://en.wikipedia.org/wiki/Kamil_Crater",
    "features": {
     "t2m_c": 22.31,
     "t2m_min_c": -1.77,
