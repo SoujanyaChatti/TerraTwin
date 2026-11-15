@@ -1,0 +1,102 @@
+# Target environment profiles. Values are approximate and for side-by-side
+# comparison only; they are never used in scoring. Verify before quoting.
+#
+# `compare` maps a requirement id to the target's value for that need, shown on
+# each site card next to the Earth value.
+
+targets:
+  moon:
+    name: Moon south pole (Shackleton rim / Artemis III candidate regions)
+    short: Moon south pole
+    description: >-
+      Ridges and crater rims near the lunar south pole get near-continuous but
+      grazing sunlight, while nearby permanently shadowed craters are among the
+      coldest places in the Solar System and trap water ice. Surface is
+      anorthositic highland regolith with heavy impact cratering.
+    facts:
+      - label: Surface temperature (sunlit rims)
+        value: "about −50 to −170 °C"
+        source: LRO Diviner
+      - label: Surface temperature (permanently shadowed craters)
+        value: "as low as ~25–40 K (about −248 to −233 °C)"
+        source: LRO Diviner (Paige et al. 2010)
+      - label: Sun elevation
+        value: "≤ ~1.5° above the horizon (1.54° axial tilt)"
+        source: LRO LOLA illumination models
+      - label: Atmosphere
+        value: "none (exosphere ~10⁻¹³ kPa)"
+        source: LADEE / Apollo surface measurements
+      - label: Water ice
+        value: "~5.6 ± 2.9 wt% in Cabeus regolith"
+        source: LCROSS (Colaprete et al. 2010)
+      - label: Terrain
+        value: "rugged crater rims, slopes often > 15°"
+        source: LRO LOLA
+    compare:
+      M1: "PSR ~ −240 °C; sunlit rims ~ −170 °C at night"
+      M2: "Pole: Sun ≤ 1.5° elevation"
+      M3: "Anorthositic highland regolith"
+      M4: "Heavily cratered (Shackleton, de Gerlache, Cabeus)"
+      M5: "Water ice in permanently shadowed craters"
+      M6: "Lunar pits/lava tubes known at lower latitudes"
+      M7: "Sterile"
+      R4: "Swings of > 100 °C between light and shadow"
+      R7: "No wind; dust lofted electrostatically"
+    citations:
+      - label: LRO Diviner Lunar Radiometer
+        url: https://www.diviner.ucla.edu/
+      - label: LRO LOLA
+        url: https://pds-geosciences.wustl.edu/missions/lro/lola.htm
+      - label: Paige et al. 2010, Science (Diviner cold traps)
+        url: https://doi.org/10.1126/science.1187726
+      - label: Colaprete et al. 2010, Science (LCROSS water)
+        url: https://doi.org/10.1126/science.1186986
+
+  mars:
+    name: Mars, Jezero Crater (Perseverance landing site)
+    short: Mars Jezero
+    description: >-
+      A 45 km impact crater that once held a lake, with a preserved river delta,
+      lakebed sediments and a basaltic, olivine- and carbonate-bearing floor.
+      Thin CO2 atmosphere, no ozone layer, large daily temperature swings and
+      frequent dust devils.
+    facts:
+      - label: Surface pressure
+        value: "about 0.6–0.76 kPa (seasonal)"
+        source: Perseverance MEDA
+      - label: Air temperature
+        value: "about −85 °C (night) to ~0 °C (day)"
+        source: Perseverance MEDA
+      - label: Daily temperature swing
+        value: "about 60–80 °C"
+        source: Perseverance MEDA
+      - label: Wind
+        value: "typically 2–10 m/s, frequent dust devils"
+        source: Perseverance MEDA
+      - label: Elevation
+        value: "about −2.6 km relative to Mars datum"
+        source: MGS MOLA
+      - label: Geology
+        value: "basaltic floor (Máaz), olivine cumulate (Séítah), delta and lake sediments"
+        source: Farley et al. 2022
+    compare:
+      M4: "Jezero itself is a 45 km impact crater"
+      M5: "Ground ice at mid/high latitudes"
+      M6: "Lava tubes and pits on Tharsis"
+      M7: "No known life"
+      R1: "Hyperarid: no liquid precipitation"
+      R2: "Unfiltered UV-C (no ozone layer)"
+      R3: "~0.6–0.76 kPa"
+      R4: "~60–80 °C daily swing"
+      R5: "Basaltic, iron-rich floor"
+      R6: "Delta + lakebed sediments, carbonates"
+      R7: "2–10 m/s, dust devils, global dust storms"
+    citations:
+      - label: Rodriguez-Manfredi et al. 2023, Nature Geoscience (MEDA)
+        url: https://doi.org/10.1038/s41561-022-01084-0
+      - label: Farley et al. 2022, Science (Jezero floor)
+        url: https://doi.org/10.1126/science.abo2196
+      - label: MGS MOLA (PDS Geosciences)
+        url: https://pds-geosciences.wustl.edu/missions/mgs/mola.html
+      - label: Mars 2020 Perseverance
+        url: https://science.nasa.gov/mission/mars-2020-perseverance/

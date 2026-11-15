@@ -1,0 +1,198 @@
+# TerraTwin requirements: what a lunar south-pole base and a Jezero-like Mars
+# outpost need to test, and how each need is measured at an Earth site.
+#
+# measure types
+#   ramp : linear ramp on a numeric feature from `zero` (score 0) to `full` (score 1).
+#          Thresholds are relative to Earth's extremes; no Earth value reaches Moon/Mars.
+#   tags : 1.0 if the site has any `primary` tag, 0.5 if any `partial` tag, else 0.
+# Missing data always scores 0 and is shown as "no data" in the UI.
+#
+# Threshold changes made during validation are logged in README.md ("Threshold log").
+
+requirements:
+  - id: M1
+    name: Extreme cold
+    missions: [moon]
+    type: ramp
+    feature: t2m_min_c
+    unit: "°C"
+    zero: 0
+    full: -40
+    measure: Coldest monthly minimum 2 m air temperature (NASA POWER T2M_MIN climatology)
+    source: NASA POWER T2M_MIN, T2M
+    citation: https://doi.org/10.1126/science.1187726   # Paige et al. 2010, Diviner cold traps
+
+  - id: M2
+    name: Low-angle polar lighting
+    missions: [moon]
+    type: ramp
+    feature: abs_lat
+    unit: "°"
+    zero: 55
+    full: 66.5
+    measure: Absolute latitude; at or above the polar circle the Sun skims the horizon as at the lunar pole
+    source: Site coordinates
+    citation: https://pds-geosciences.wustl.edu/missions/lro/lola.htm
+
+  - id: M3
+    name: Regolith analog (basalt or anorthosite)
+    missions: [moon]
+    type: tags
+    primary: [anorthosite, basalt]
+    partial: [volcanic, tephra]
+    measure: Lithology tag
+    source: Geologic literature (see site citation)
+    citation: https://doi.org/10.1126/science.1186986   # Colaprete et al. 2010 (south-pole regolith/ice)
+
+  - id: M4
+    name: Impact crater terrain
+    missions: [moon, mars]
+    type: tags
+    primary: [impact_crater]
+    partial: [crater]
+    measure: Tag impact_crater (confirmed in the Earth Impact Database); volcanic crater = partial
+    source: Earth Impact Database
+    citation: http://www.passc.net/EarthImpactDatabase/
+
+  - id: M5
+    name: Ground ice or permafrost
+    missions: [moon, mars]
+    type: tags
+    primary: [permafrost, ground_ice]
+    partial: [glacier]
+    measure: Tag permafrost / ground_ice; glacier = partial
+    source: Literature (see site citation)
+    citation: https://doi.org/10.1126/science.1186986
+
+  - id: M6
+    name: Lava tubes or caves for shelter
+    missions: [moon, mars]
+    type: tags
+    primary: [lava_tube]
+    partial: [cave]
+    measure: Tag lava_tube; other caves = partial
+    source: Literature (see site citation)
+    citation: https://doi.org/10.1002/2017GL074998   # Kaku et al. 2017, Marius Hills lava tube
+
+  - id: M7
+    name: Barren, near-lifeless surface
+    missions: [moon, mars]
+    type: tags
+    primary: [barren]
+    partial: [sparse_vegetation]
+    measure: Tag barren; sparse vegetation = partial (MODIS NDVI is a stretch goal)
+    source: Literature / imagery; MODIS MOD13Q1 planned
+    citation: https://lpdaac.usgs.gov/products/mod13q1v061/
+
+  - id: R1
+    name: Hyperaridity
+    missions: [mars]
+    type: ramp
+    feature: precip_mm_yr
+    unit: "mm/yr"
+    zero: 250
+    full: 25
+    measure: Annual precipitation (NASA POWER PRECTOTCORR, mm/day x 365)
+    source: NASA POWER PRECTOTCORR
+    citation: https://doi.org/10.1126/science.1089143   # Navarro-Gonzalez et al. 2003, Mars-like soils
+
+  - id: R2
+    name: High UV exposure
+    missions: [mars]
+    type: ramp
+    feature: uv_peak
+    unit: "UV index"
+    zero: 2
+    full: 6
+    measure: Peak-month all-sky surface UV index (NASA POWER ALLSKY_SFC_UV_INDEX, 24 h mean)
+    source: NASA POWER ALLSKY_SFC_UV_INDEX
+    citation: https://power.larc.nasa.gov/docs/
+
+  - id: R3
+    name: Low air pressure
+    missions: [mars]
+    type: ramp
+    feature: ps_kpa
+    unit: "kPa"
+    zero: 95
+    full: 60
+    measure: Annual mean surface pressure (NASA POWER PS)
+    source: NASA POWER PS
+    citation: https://doi.org/10.1038/s41561-022-01084-0   # Rodriguez-Manfredi et al. 2023, MEDA
+
+  - id: R4
+    name: Large daily temperature swing
+    missions: [moon, mars]
+    type: ramp
+    feature: t2m_range_c
+    unit: "°C"
+    zero: 8
+    full: 20
+    measure: Annual mean diurnal 2 m temperature range (NASA POWER T2M_RANGE)
+    source: NASA POWER T2M_RANGE
+    citation: https://doi.org/10.1038/s41561-022-01084-0
+
+  - id: R5
+    name: Iron-rich basalt or volcanic terrain
+    missions: [mars]
+    type: tags
+    primary: [basalt, volcanic]
+    partial: [iron_rich, tephra]
+    measure: Tag basalt / volcanic; iron-rich sediments or tephra = partial
+    source: Literature (see site citation)
+    citation: https://doi.org/10.1126/science.abo2196   # Farley et al. 2022, Jezero floor igneous rocks
+
+  - id: R6
+    name: Ancient lakebed or evaporites (Jezero-like)
+    missions: [mars]
+    type: tags
+    primary: [paleolake, evaporite]
+    partial: [hydrothermal, sediment]
+    measure: Tag paleolake / evaporite; hydrothermal or lake sediments = partial
+    source: Literature (see site citation)
+    citation: https://doi.org/10.1126/science.abo2196
+
+  - id: R7
+    name: Dust and wind
+    missions: [moon, mars]
+    type: ramp
+    feature: ws10m
+    unit: "m/s"
+    zero: 2
+    full: 8
+    measure: Annual mean 10 m wind speed (NASA POWER WS10M)
+    source: NASA POWER WS10M
+    citation: https://doi.org/10.1038/s41561-022-01084-0
+
+# Mission-purpose presets: weights 0-3. Emphasized requirements get 3, the rest 1.
+presets:
+  balanced:
+    label: Balanced
+    emphasis: []
+  rover:
+    label: Rover and mobility testing
+    emphasis: [M3, M4, R5, R7]
+  habitat:
+    label: Habitat and isolation
+    emphasis: [M1, M2, M6, R3]
+  isru:
+    label: ISRU and ice extraction
+    emphasis: [M5, M3, R6]
+  astrobio:
+    label: Astrobiology and sample science
+    emphasis: [R1, R2, R6, M7]
+
+# Untestable on Earth: shown in the UI, never scored.
+gaps:
+  - text: 1/6 g (Moon) and 0.38 g (Mars) gravity
+    missions: [moon, mars]
+  - text: Hard vacuum (Moon) and a 0.6 kPa CO2 atmosphere (Mars)
+    missions: [moon, mars]
+  - text: Permanently shadowed regions near 40 K
+    missions: [moon]
+  - text: Sharp, electrostatically charged lunar dust
+    missions: [moon]
+  - text: Galactic cosmic radiation and solar particle events
+    missions: [moon, mars]
+  - text: The two-week lunar night
+    missions: [moon]
