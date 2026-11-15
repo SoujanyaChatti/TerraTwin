@@ -241,23 +241,24 @@ function buildGlobe() {
   }
   const host = $("#scene");
   const light = window.matchMedia("(prefers-color-scheme: light)").matches;
+  const ACCENT = light ? "79,122,0" : "198,242,78";
   globe = new Globe(host, { animateIn: true })
     .backgroundColor("rgba(0,0,0,0)")
     .globeImageUrl("img/earth-blue-marble.jpg")
     .bumpImageUrl("img/earth-topology.png")
     .showAtmosphere(true)
-    .atmosphereColor(light ? "#7fa9bd" : "#a9c7d3")
+    .atmosphereColor(light ? "#6aa6bf" : "#7cc9e8")
     .atmosphereAltitude(0.16)
     .htmlElementsData(DATA.sites)
     .htmlLat("lat")
     .htmlLng("lon")
     .htmlAltitude(0.006)
     .htmlElement((d) => pins[d.id])
-    .ringColor(() => (t) => `rgba(255,106,26,${(1 - t) * 0.9})`)
+    .ringColor(() => (t) => `rgba(${ACCENT},${(1 - t) * 0.9})`)
     .ringMaxRadius(4.5)
     .ringPropagationSpeed(2.2)
     .ringRepeatPeriod(1600)
-    .arcColor(() => ["rgba(255,106,26,0.15)", "rgba(255,106,26,0.95)"])
+    .arcColor(() => [`rgba(${ACCENT},0.15)`, `rgba(${ACCENT},0.95)`])
     .arcStroke(0.45)
     .arcDashLength(0.35)
     .arcDashGap(0.18)
