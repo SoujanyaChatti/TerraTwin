@@ -90,8 +90,9 @@ requirements:
     type: ramp
     feature: precip_mm_yr
     unit: "mm/yr"
-    zero: 250
-    full: 25
+    zero: 500
+    full: 50
+    # tuned: PRD start 250 -> 25; widened to the semi-arid boundary (validation, see README)
     measure: Annual precipitation (NASA POWER PRECTOTCORR, mm/day x 365)
     source: NASA POWER PRECTOTCORR
     citation: https://doi.org/10.1126/science.1089143   # Navarro-Gonzalez et al. 2003, Mars-like soils
@@ -102,8 +103,9 @@ requirements:
     type: ramp
     feature: uv_peak
     unit: "UV index"
-    zero: 2
-    full: 6
+    zero: 1.5
+    full: 4
+    # tuned: PRD start 4 -> 10; POWER UV index is a 24 h mean, Earth peak-month max is ~4.3
     measure: Peak-month all-sky surface UV index (NASA POWER ALLSKY_SFC_UV_INDEX, 24 h mean)
     source: NASA POWER ALLSKY_SFC_UV_INDEX
     citation: https://power.larc.nasa.gov/docs/
@@ -126,8 +128,9 @@ requirements:
     type: ramp
     feature: t2m_range_c
     unit: "°C"
-    zero: 8
-    full: 20
+    zero: 6
+    full: 16
+    # tuned: PRD start 8 -> 20; rescaled to the Earth range in POWER T2M_RANGE (1-17 C)
     measure: Annual mean diurnal 2 m temperature range (NASA POWER T2M_RANGE)
     source: NASA POWER T2M_RANGE
     citation: https://doi.org/10.1038/s41561-022-01084-0

@@ -116,6 +116,7 @@ def main() -> int:
             "lon": lon,
             "tags": [t.strip() for t in row["tags"].split(";") if t.strip()],
             "is_known_analog": row["is_known_analog"].strip().lower() == "true",
+            "analog_for": (row.get("analog_for") or "").strip() or None,
             "access_tier": int(row["access_tier"]),
             "description": row["description"],
             "citation_url": row["citation_url"],

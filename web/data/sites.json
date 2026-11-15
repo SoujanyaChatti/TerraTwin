@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-15T09:32:37Z",
+ "generated": "2026-11-15T09:35:33Z",
  "features": {
   "t2m_c": {
    "label": "Mean 2 m temperature",
@@ -189,8 +189,8 @@
    "type": "ramp",
    "feature": "precip_mm_yr",
    "unit": "mm/yr",
-   "zero": 250,
-   "full": 25,
+   "zero": 500,
+   "full": 50,
    "measure": "Annual precipitation (NASA POWER PRECTOTCORR, mm/day x 365)",
    "source": "NASA POWER PRECTOTCORR",
    "citation": "https://doi.org/10.1126/science.1089143"
@@ -204,8 +204,8 @@
    "type": "ramp",
    "feature": "uv_peak",
    "unit": "UV index",
-   "zero": 2,
-   "full": 6,
+   "zero": 1.5,
+   "full": 4,
    "measure": "Peak-month all-sky surface UV index (NASA POWER ALLSKY_SFC_UV_INDEX, 24 h mean)",
    "source": "NASA POWER ALLSKY_SFC_UV_INDEX",
    "citation": "https://power.larc.nasa.gov/docs/"
@@ -235,8 +235,8 @@
    "type": "ramp",
    "feature": "t2m_range_c",
    "unit": "°C",
-   "zero": 8,
-   "full": 20,
+   "zero": 6,
+   "full": 16,
    "measure": "Annual mean diurnal 2 m temperature range (NASA POWER T2M_RANGE)",
    "source": "NASA POWER T2M_RANGE",
    "citation": "https://doi.org/10.1038/s41561-022-01084-0"
@@ -527,6 +527,7 @@
     "sediment"
    ],
    "is_known_analog": true,
+   "analog_for": "mars",
    "access_tier": 2,
    "description": "Hyperarid core of the Atacama; soils so dry and oxidizing that Viking-style life-detection experiments returned Mars-like results.",
    "citation_url": "https://doi.org/10.1126/science.1089143",
@@ -562,6 +563,7 @@
     "paleolake"
    ],
    "is_known_analog": true,
+   "analog_for": "both",
    "access_tier": 3,
    "description": "23 km impact crater in a polar desert; home of the NASA Haughton-Mars Project and the FMARS habitat.",
    "citation_url": "https://en.wikipedia.org/wiki/Haughton%E2%80%93Mars_Project",
@@ -596,6 +598,7 @@
     "crater"
    ],
    "is_known_analog": true,
+   "analog_for": "mars",
    "access_tier": 1,
    "description": "Hot, dry basin with Pleistocene Lake Manly evaporites and the Ubehebe volcanic crater; used to test Mars rover and instrument concepts.",
    "citation_url": "https://en.wikipedia.org/wiki/Death_Valley",
@@ -631,6 +634,7 @@
     "evaporite"
    ],
    "is_known_analog": true,
+   "analog_for": "mars",
    "access_tier": 3,
    "description": "Coldest, driest ice-free terrain on Earth; ground ice, saline ponds and polygons used as a Mars analog for decades.",
    "citation_url": "https://en.wikipedia.org/wiki/McMurdo_Dry_Valleys",
@@ -666,6 +670,7 @@
     "permafrost"
    ],
    "is_known_analog": true,
+   "analog_for": "moon",
    "access_tier": 2,
    "description": "High basaltic volcano with tephra fields; site of NASA/PISCES lunar ISRU field tests in 2010 and 2012.",
    "citation_url": "https://en.wikipedia.org/wiki/Pacific_International_Space_Center_for_Exploration_Systems",
@@ -699,6 +704,7 @@
     "iron_rich"
    ],
    "is_known_analog": true,
+   "analog_for": "mars",
    "access_tier": 1,
    "description": "Mars Society simulation habitat amid red Jurassic sediments near Hanksville, Utah.",
    "citation_url": "https://en.wikipedia.org/wiki/Mars_Desert_Research_Station",
@@ -732,6 +738,7 @@
     "sediment"
    ],
    "is_known_analog": true,
+   "analog_for": "mars",
    "access_tier": 1,
    "description": "Acidic, iron-rich river system analogous to Meridiani jarosite deposits; NASA MARTE drilling site.",
    "citation_url": "https://en.wikipedia.org/wiki/Rio_Tinto_(river)",
@@ -768,6 +775,7 @@
     "glacier"
    ],
    "is_known_analog": true,
+   "analog_for": "mars",
    "access_tier": 3,
    "description": "Arctic volcanic complex with carbonate globules like those in Martian meteorite ALH84001; AMASE expedition site.",
    "citation_url": "https://en.wikipedia.org/wiki/Sverrefjellet",
@@ -801,6 +809,7 @@
     "sparse_vegetation"
    ],
    "is_known_analog": true,
+   "analog_for": "moon",
    "access_tier": 1,
    "description": "Young 1.2 km impact crater in Arizona used for Apollo astronaut geology training.",
    "citation_url": "https://en.wikipedia.org/wiki/Meteor_Crater",
@@ -836,6 +845,7 @@
     "sparse_vegetation"
    ],
    "is_known_analog": true,
+   "analog_for": "moon",
    "access_tier": 1,
    "description": "Basaltic lava fields and tubes in Idaho; Apollo 14 geology training and NASA FINESSE field site.",
    "citation_url": "https://en.wikipedia.org/wiki/Craters_of_the_Moon_National_Monument_and_Preserve",
@@ -870,6 +880,7 @@
     "barren"
    ],
    "is_known_analog": true,
+   "analog_for": "both",
    "access_tier": 1,
    "description": "La Corona lava tube system; used for ESA PANGAEA and CAVES astronaut training.",
    "citation_url": "https://en.wikipedia.org/wiki/Cueva_de_los_Verdes",
@@ -906,6 +917,7 @@
     "glacier"
    ],
    "is_known_analog": true,
+   "analog_for": "moon",
    "access_tier": 2,
    "description": "Basaltic caldera and tephra plains in the highlands where Apollo astronauts trained in 1965 and 1967.",
    "citation_url": "https://en.wikipedia.org/wiki/Askja",
@@ -941,6 +953,7 @@
     "barren"
    ],
    "is_known_analog": true,
+   "analog_for": "mars",
    "access_tier": 2,
    "description": "High-altitude saline lake basin in a cold desert; studied as a Mars analog for evaporites and periglacial landforms.",
    "citation_url": "https://en.wikipedia.org/wiki/Tso_Kar",
@@ -974,6 +987,7 @@
     "barren"
    ],
    "is_known_analog": true,
+   "analog_for": "mars",
    "access_tier": 2,
    "description": "Hyperarid, high-altitude playa with sulfate and chloride evaporites; studied as a Mars analog.",
    "citation_url": "https://en.wikipedia.org/wiki/Qaidam_Basin",
@@ -1005,6 +1019,7 @@
     "sediment"
    ],
    "is_known_analog": true,
+   "analog_for": "both",
    "access_tier": 1,
    "description": "Lake with freshwater microbialites; NASA/CSA Pavilion Lake Research Project tested EVA and science operations.",
    "citation_url": "https://en.wikipedia.org/wiki/Pavilion_Lake",
@@ -1039,6 +1054,7 @@
     "sparse_vegetation"
    ],
    "is_known_analog": true,
+   "analog_for": "moon",
    "access_tier": 1,
    "description": "Basaltic flow in northern Arizona used by NASA Desert RATS for rover and spacesuit field tests.",
    "citation_url": "https://en.wikipedia.org/wiki/Desert_Research_and_Technology_Studies",
@@ -1072,6 +1088,7 @@
     "evaporite"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 1,
    "description": "Rare impact crater in Deccan basalt with a saline, alkaline lake; a close analog for craters in Martian basalt.",
    "citation_url": "https://en.wikipedia.org/wiki/Lonar_Lake",
@@ -1105,6 +1122,7 @@
     "barren"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 1,
    "description": "Vast seasonal salt marsh; flat evaporite plains comparable to Martian chloride deposits.",
    "citation_url": "https://en.wikipedia.org/wiki/Rann_of_Kutch",
@@ -1140,6 +1158,7 @@
     "glacier"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 2,
    "description": "Cold Himalayan desert with periglacial landforms and Tethyan sediments.",
    "citation_url": "https://en.wikipedia.org/wiki/Spiti_Valley",
@@ -1174,6 +1193,7 @@
     "sparse_vegetation"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 2,
    "description": "High-altitude hot springs with borax and sulfur deposits in a permafrost setting.",
    "citation_url": "https://en.wikipedia.org/wiki/Puga_Valley",
@@ -1206,6 +1226,7 @@
     "volcanic"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 1,
    "description": "Thick flood-basalt sequence, a compositional analog for Martian and lunar mare basalts.",
    "citation_url": "https://en.wikipedia.org/wiki/Deccan_Traps",
@@ -1240,6 +1261,7 @@
     "barren"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 2,
    "description": "High cold desert above 4,300 m with saline lakes, low pressure and strong UV.",
    "citation_url": "https://en.wikipedia.org/wiki/Changtang",
@@ -1273,6 +1295,7 @@
     "hyperarid"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 2,
    "description": "One of the hottest, driest surfaces on Earth, with giant yardangs carved by wind like those on Mars.",
    "citation_url": "https://en.wikipedia.org/wiki/Dasht-e_Lut",
@@ -1307,6 +1330,7 @@
     "volcanic"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 3,
    "description": "Hyperacid, hypersaline hydrothermal field below sea level; tests the limits of habitability.",
    "citation_url": "https://en.wikipedia.org/wiki/Dallol_(hydrothermal_system)",
@@ -1341,6 +1365,7 @@
     "crater"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 3,
    "description": "Active basaltic shield volcano with a persistent lava lake in the Afar desert.",
    "citation_url": "https://en.wikipedia.org/wiki/Erta_Ale",
@@ -1373,6 +1398,7 @@
     "sparse_vegetation"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 2,
    "description": "Ancient coastal fog desert with gravel plains and large dune fields.",
    "citation_url": "https://en.wikipedia.org/wiki/Namib",
@@ -1407,6 +1433,7 @@
     "iron_rich"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 2,
    "description": "Cold, windy desert with red Cretaceous sediments and wide seasonal temperature swings.",
    "citation_url": "https://en.wikipedia.org/wiki/Flaming_Cliffs",
@@ -1441,6 +1468,7 @@
     "barren"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 3,
    "description": "High volcanic plateau with salars and basaltic cones, intense UV and low pressure.",
    "citation_url": "https://en.wikipedia.org/wiki/Puna_de_Atacama",
@@ -1474,6 +1502,7 @@
     "barren"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 2,
    "description": "World's largest salt flat, the remnant of Pleistocene lakes on the Altiplano.",
    "citation_url": "https://en.wikipedia.org/wiki/Salar_de_Uyuni",
@@ -1508,6 +1537,7 @@
     "barren"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 3,
    "description": "5,900 m volcano with one of the highest lakes on Earth; extreme UV and low pressure.",
    "citation_url": "https://en.wikipedia.org/wiki/Licancabur",
@@ -1542,6 +1572,7 @@
     "sparse_vegetation"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 3,
    "description": "Remote, windswept sub-Antarctic flood-basalt archipelago.",
    "citation_url": "https://en.wikipedia.org/wiki/Kerguelen_Islands",
@@ -1577,6 +1608,7 @@
     "barren"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 3,
    "description": "Polar volcano with fumarolic ice caves, permafrost and an active lava lake.",
    "citation_url": "https://en.wikipedia.org/wiki/Mount_Erebus",
@@ -1611,6 +1643,7 @@
     "sediment"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 2,
    "description": "Ice-free terrain at the edge of the Greenland ice sheet with permafrost and glacial outwash.",
    "citation_url": "https://en.wikipedia.org/wiki/Kangerlussuaq",
@@ -1647,6 +1680,7 @@
     "permafrost"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 3,
    "description": "Fresh basaltic lava fields and tephra plains with lava tubes from the 2012–13 eruption.",
    "citation_url": "https://en.wikipedia.org/wiki/Tolbachik",
@@ -1680,6 +1714,7 @@
     "volcanic"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 2,
    "description": "Among the longest lava tube systems on Earth, formed ~190,000 years ago.",
    "citation_url": "https://en.wikipedia.org/wiki/Undara_Volcanic_National_Park",
@@ -1714,6 +1749,7 @@
     "barren"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 2,
    "description": "3.5-billion-year-old hydrothermal sediments with some of Earth's oldest evidence of life.",
    "citation_url": "https://en.wikipedia.org/wiki/Dresser_Formation",
@@ -1747,6 +1783,7 @@
     "barren"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 2,
    "description": "Australia's largest salt lake, usually dry, in the arid interior.",
    "citation_url": "https://en.wikipedia.org/wiki/Kati_Thanda%E2%80%93Lake_Eyre",
@@ -1780,6 +1817,7 @@
     "sparse_vegetation"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 2,
    "description": "Well-preserved 880 m meteorite crater in the Great Sandy Desert.",
    "citation_url": "https://en.wikipedia.org/wiki/Wolfe_Creek_Crater",
@@ -1812,6 +1850,7 @@
     "sparse_vegetation"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 2,
    "description": "Eroded central uplift of a 142-million-year-old impact structure.",
    "citation_url": "https://en.wikipedia.org/wiki/Gosses_Bluff_crater",
@@ -1846,6 +1885,7 @@
     "sparse_vegetation"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 3,
    "description": "100 km impact structure in Siberian permafrost, rich in impact diamonds.",
    "citation_url": "https://en.wikipedia.org/wiki/Popigai_crater",
@@ -1880,6 +1920,7 @@
     "sparse_vegetation"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 3,
    "description": "3.6-million-year-old Arctic impact crater lake with a continuous sediment record.",
    "citation_url": "https://en.wikipedia.org/wiki/Lake_El%27gygytgyn",
@@ -1914,6 +1955,7 @@
     "sparse_vegetation"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 3,
    "description": "Young 3.4 km impact crater in the Nunavik tundra.",
    "citation_url": "https://en.wikipedia.org/wiki/Pingualuit_crater",
@@ -1946,6 +1988,7 @@
     "anorthosite"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 2,
    "description": "Large impact structure with impact melt over anorthositic target rocks.",
    "citation_url": "https://en.wikipedia.org/wiki/Manicouagan_Reservoir",
@@ -1980,6 +2023,7 @@
     "sparse_vegetation"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 3,
    "description": "One of very few terrestrial impact craters in anorthosite, the dominant lunar highland rock.",
    "citation_url": "https://en.wikipedia.org/wiki/Mistastin_Lake",
@@ -2011,6 +2055,7 @@
     "anorthosite"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 1,
    "description": "Layered intrusion with anorthosite used as feedstock for NASA lunar highland regolith simulants.",
    "citation_url": "https://en.wikipedia.org/wiki/Stillwater_igneous_complex",
@@ -2046,6 +2091,7 @@
     "sparse_vegetation"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 1,
    "description": "Basaltic cinder deposit near Flagstaff, source of the JSC-1 lunar regolith simulant.",
    "citation_url": "https://en.wikipedia.org/wiki/San_Francisco_volcanic_field",
@@ -2080,6 +2126,7 @@
     "sparse_vegetation"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 1,
    "description": "More than 700 lava tube caves, several with perennial ice.",
    "citation_url": "https://en.wikipedia.org/wiki/Lava_Beds_National_Monument",
@@ -2115,6 +2162,7 @@
     "sparse_vegetation"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 1,
    "description": "Young basalt flows with lava tubes and ice caves in New Mexico.",
    "citation_url": "https://en.wikipedia.org/wiki/El_Malpais_National_Monument",
@@ -2148,6 +2196,7 @@
     "volcanic"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 1,
    "description": "Large, accessible basaltic lava tube system on a volcanic island.",
    "citation_url": "https://en.wikipedia.org/wiki/Manjanggul",
@@ -2183,6 +2232,7 @@
     "crater"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 2,
    "description": "Arid basaltic lava field with cinder cones and lava tubes such as Umm Jirsan.",
    "citation_url": "https://en.wikipedia.org/wiki/Harrat_Khaybar",
@@ -2215,6 +2265,7 @@
     "hyperarid"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 3,
    "description": "The largest continuous sand desert on Earth.",
    "citation_url": "https://en.wikipedia.org/wiki/Rub%27_al_Khali",
@@ -2249,6 +2300,7 @@
     "barren"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 3,
    "description": "Large shield volcano with a summit caldera in the central Sahara.",
    "citation_url": "https://en.wikipedia.org/wiki/Emi_Koussi",
@@ -2281,6 +2333,7 @@
     "barren"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 3,
    "description": "Pristine 45 m iron-meteorite crater in the hyperarid Western Desert.",
    "citation_url": "https://en.wikipedia.org/wiki/Kamil_crater",
@@ -2314,6 +2367,7 @@
     "barren"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 3,
    "description": "Dried salt lake with yardangs in the Tarim Basin; one of the driest places in Asia.",
    "citation_url": "https://en.wikipedia.org/wiki/Lop_Nur",
@@ -2349,6 +2403,7 @@
     "barren"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 2,
    "description": "High, cold, dry plateau with saline lakes and periglacial terrain.",
    "citation_url": "https://en.wikipedia.org/wiki/Ngari_Prefecture",
@@ -2384,6 +2439,7 @@
     "glacier"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 3,
    "description": "Perennial cold saline springs flowing through thick permafrost.",
    "citation_url": "https://en.wikipedia.org/wiki/Axel_Heiberg_Island",
@@ -2418,6 +2474,7 @@
     "permafrost"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 3,
    "description": "Blue-ice field where Martian meteorite ALH84001 was found.",
    "citation_url": "https://en.wikipedia.org/wiki/Allan_Hills",
@@ -2451,6 +2508,7 @@
     "barren"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 3,
    "description": "The highest volcano on Earth; dry, cold, low-pressure summit region with permafrost.",
    "citation_url": "https://en.wikipedia.org/wiki/Ojos_del_Salado",
@@ -2484,6 +2542,7 @@
     "barren"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 2,
    "description": "Equatorial volcanic summit above 5,800 m with low pressure and intense UV.",
    "citation_url": "https://en.wikipedia.org/wiki/Mount_Kilimanjaro",
@@ -2518,6 +2577,7 @@
     "barren"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 2,
    "description": "Hypersaline lake in basaltic rift terrain, 155 m below sea level.",
    "citation_url": "https://en.wikipedia.org/wiki/Lake_Assal_(Djibouti)",
@@ -2551,6 +2611,7 @@
     "iron_rich"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 1,
    "description": "Red sandstone desert valleys often used to depict Mars on film.",
    "citation_url": "https://en.wikipedia.org/wiki/Wadi_Rum",
@@ -2586,6 +2647,7 @@
     "lava_tube"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 1,
    "description": "Barren basalt and tephra fields downwind of Kilauea's acid gas plume.",
    "citation_url": "https://en.wikipedia.org/wiki/Ka%CA%BB%C5%AB_Desert",
@@ -2620,6 +2682,7 @@
     "lava_tube"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 3,
    "description": "Young, active basaltic shield volcano in the Galápagos.",
    "citation_url": "https://en.wikipedia.org/wiki/Fernandina_Island",
@@ -2653,6 +2716,7 @@
     "barren"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 2,
    "description": "Large salt flat on the edge of the hyperarid Atacama.",
    "citation_url": "https://en.wikipedia.org/wiki/Salar_de_Atacama",
@@ -2686,6 +2750,7 @@
     "sparse_vegetation"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 3,
    "description": "Huge thaw slump exposing hundreds of thousands of years of Siberian ground ice.",
    "citation_url": "https://en.wikipedia.org/wiki/Batagaika_crater",
@@ -2721,6 +2786,7 @@
     "sparse_vegetation"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 1,
    "description": "Basaltic field with large maar craters in the Sonoran Desert.",
    "citation_url": "https://en.wikipedia.org/wiki/Pinacate_Peaks",
@@ -2754,6 +2820,7 @@
     "sediment"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 1,
    "description": "Desert basin with gypsum dunes and living stromatolites.",
    "citation_url": "https://en.wikipedia.org/wiki/Cuatro_Ci%C3%A9negas",
@@ -2786,6 +2853,7 @@
     "barren"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 1,
    "description": "The largest gypsum dune field on Earth, like Mars' north-polar gypsum dunes.",
    "citation_url": "https://en.wikipedia.org/wiki/White_Sands_National_Park",
@@ -2819,6 +2887,7 @@
     "evaporite"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 3,
    "description": "Small impact crater in the hyperarid, high Atacama.",
    "citation_url": "https://en.wikipedia.org/wiki/Monturaqui_crater",
@@ -2851,6 +2920,7 @@
     "barren"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 3,
    "description": "Iron-meteorite craters in the sand sea of the Rub' al Khali.",
    "citation_url": "https://en.wikipedia.org/wiki/Wabar_craters",
@@ -2884,6 +2954,7 @@
     "barren"
    ],
    "is_known_analog": false,
+   "analog_for": null,
    "access_tier": 3,
    "description": "Volcanic highland of basalt plateaus and phonolite spires in the central Sahara.",
    "citation_url": "https://en.wikipedia.org/wiki/Hoggar_Mountains",
