@@ -52,7 +52,7 @@ node tests/validate.mjs                  # known-analog ranks (exit 1 if < 60% i
 python3 -m http.server 8000 -d web       # open http://localhost:8000
 ```
 
-No build step and no backend. `web/` is plain HTML and ES modules, with Leaflet 1.9.4 loaded from cdnjs. The raw POWER responses are committed in `data/cache/`, so the pipeline never needs the network.
+No build step and no backend. `web/` is plain HTML and ES modules, with globe.gl 2.46.2 loaded from jsdelivr. The 3D globe needs WebGL; without it the planner still works from the panels. The raw POWER responses are committed in `data/cache/`, so the pipeline never needs the network.
 
 ## Repository layout
 
@@ -73,6 +73,7 @@ tests/validate.mjs           known-analog validation check
 | Dataset | Used for | URL |
 |---|---|---|
 | NASA POWER climatology API (T2M, T2M_MIN, T2M_MAX, T2M_RANGE, PRECTOTCORR, ALLSKY_SFC_UV_INDEX, PS, WS10M) | All Earth climate features (M1, R1, R2, R3, R4, R7) | https://power.larc.nasa.gov/ |
+| NASA Blue Marble | 3D globe surface imagery | https://visibleearth.nasa.gov/collection/1484/blue-marble |
 | MODIS MOD13Q1 NDVI (ORNL DAAC) | Planned replacement for the `barren` tag (M7); cited, not yet ingested | https://modis.ornl.gov/data/modis_webservice.html |
 | LRO Diviner Lunar Radiometer | Moon south-pole temperature profile | https://www.diviner.ucla.edu/ |
 | LRO LOLA | Moon south-pole terrain and illumination | https://pds-geosciences.wustl.edu/missions/lro/lola.htm |
@@ -84,8 +85,9 @@ tests/validate.mjs           known-analog validation check
 
 ## Other data and tools
 
-- **Leaflet 1.9.4**: https://leafletjs.com/ (BSD-2)
-- **Map tiles**: Esri World Dark/Light Gray Canvas and World Imagery, © Esri, HERE, Garmin, Maxar, © OpenStreetMap contributors
+- **globe.gl 2.46.2** (MIT, three.js): https://globe.gl/ for the 3D globe
+- **Globe imagery**: NASA Blue Marble (public domain) and a topography bump map, as packaged in the `three-globe` examples and served from `web/img/`: https://visibleearth.nasa.gov/collection/1484/blue-marble
+- **Fonts**: Instrument Sans, Instrument Serif and Martian Mono via Google Fonts (SIL OFL)
 - **Earth Impact Database** (Planetary and Space Science Centre, UNB): http://www.passc.net/EarthImpactDatabase/
 - **Papers**:
   - Paige et al. 2010, *Science*, Diviner cold traps: https://doi.org/10.1126/science.1187726

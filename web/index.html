@@ -6,29 +6,45 @@
   <title>TerraTwin</title>
   <meta name="description" content="TerraTwin picks the smallest set of reachable Earth sites that together let us test what a lunar south-pole base and a Mars outpost need, and states what no Earth site can test." />
   <link rel="icon" href="img/icon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wdth,wght@75..100,400..700&family=Instrument+Serif:ital@0;1&family=Martian+Mono:wght@300..600&display=swap" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <header class="topbar">
+  <!-- 3D scene -->
+  <div id="scene" aria-label="Interactive globe of candidate sites"></div>
+  <div class="scene-fallback" id="scene-fallback" hidden>
+    <p class="mono">3D view unavailable</p>
+    <p class="mono dim">WebGL is off in this browser. The planner still works from the panels.</p>
+  </div>
+
+  <!-- Bezel frame with corner ticks -->
+  <div class="bezel" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+  <!-- Top HUD -->
+  <header class="hud hud-top">
     <div class="brand">
-      <img src="img/icon.svg" alt="" width="32" height="32" />
-      <div>
-        <h1>TerraTwin</h1>
-        <p class="tagline">No place on Earth is the Moon or Mars. These places together come closest.</p>
-      </div>
+      <img src="img/icon.svg" alt="" width="22" height="22" />
+      <span class="wordmark">TerraTwin</span>
+      <button class="mono link" type="button" id="how-link">How it works <span class="kbd">?</span></button>
     </div>
-    <div class="top-actions">
-      <button id="copy-link" class="btn ghost" type="button" title="Copy a link to this exact view">Copy link</button>
-      <button id="export-csv" class="btn ghost" type="button" title="Download the current portfolio as CSV">Export CSV</button>
+    <div class="hud-actions">
+      <span class="mono dim readout" id="data-readout"></span>
+      <button id="copy-link" class="btn" type="button" title="Copy a link to this exact view">Copy link</button>
+      <button id="export-csv" class="btn" type="button" title="Download the current portfolio as CSV">Export CSV</button>
     </div>
   </header>
 
   <main class="layout">
-    <!-- Left: controls -->
-    <aside class="panel controls" aria-label="Controls">
+    <!-- Left column: headline + controls -->
+    <aside class="col-left" aria-label="Controls">
+      <p class="eyebrow mono"><span class="rule"></span>Analog portfolio planner <span class="sep">·</span> Space Apps 2026</p>
+      <h1 class="display">No place on Earth is the <em id="hero-word">Moon.</em></h1>
+      <p class="lede">So which places, together, come closest? TerraTwin picks the fewest reachable Earth sites that cover what a lunar south-pole base and a Mars outpost need to test, and says what Earth can't test at all.</p>
+
       <section class="control">
-        <span class="label" id="mission-label">Mission</span>
+        <span class="step mono" id="mission-label"><b>01</b> / Mission</span>
         <div class="segmented" role="radiogroup" aria-labelledby="mission-label" id="mission">
           <button type="button" role="radio" data-value="moon">Moon</button>
           <button type="button" role="radio" data-value="mars">Mars</button>
@@ -37,52 +53,47 @@
       </section>
 
       <section class="control">
-        <label class="label" for="preset">Mission purpose</label>
-        <select id="preset"></select>
+        <label class="step mono" for="preset"><b>02</b> / Purpose</label>
+        <div class="select-wrap"><select id="preset"></select></div>
         <details class="advanced">
-          <summary>Advanced: requirement weights</summary>
+          <summary class="mono">Advanced · requirement weights</summary>
           <div id="weights"></div>
         </details>
       </section>
 
-      <section class="control">
-        <label class="label" for="k">Portfolio size <output id="k-out"></output></label>
-        <input type="range" id="k" min="1" max="10" step="1" />
+      <section class="control two">
+        <div>
+          <label class="step mono" for="k"><b>03</b> / Sites <output id="k-out"></output></label>
+          <input type="range" id="k" min="1" max="10" step="1" />
+        </div>
+        <div>
+          <label class="step mono" for="lambda"><b>04</b> / Reach <span class="nocase">λ</span> <output id="lambda-out"></output></label>
+          <input type="range" id="lambda" min="0" max="0.5" step="0.05" />
+        </div>
       </section>
+      <p class="hint mono"><span class="nocase">λ</span> = cost per access tier above 1 (tier 1 easy · tier 3 hard)</p>
 
       <section class="control">
-        <label class="label" for="lambda">Reachability penalty λ <output id="lambda-out"></output></label>
-        <input type="range" id="lambda" min="0" max="0.5" step="0.05" />
-        <p class="hint">Cost per access tier above 1 (tier 1 easy, tier 3 hard).</p>
+        <span class="step mono"><b>05</b> / Filter</span>
+        <label class="toggle"><input type="checkbox" id="new-only" /><span class="mono">New candidates only</span></label>
       </section>
 
-      <section class="control">
-        <label class="check"><input type="checkbox" id="new-only" /> New candidates only</label>
-        <p class="hint">Hide known analogs: what new sites should we look at?</p>
-      </section>
-
-      <section class="legend" aria-label="Map legend">
-        <div><span class="dot known"></span>Known analog</div>
-        <div><span class="dot new"></span>New candidate</div>
-        <div><span class="dot ring"></span>Dual-use (Moon and Mars)</div>
-        <div><span class="dot small"></span>Not in portfolio</div>
+      <section class="legend mono" aria-label="Map legend">
+        <span><i class="sw known"></i>Known analog</span>
+        <span><i class="sw new"></i>New candidate</span>
+        <span><i class="sw dual"></i>Dual-use</span>
+        <span><i class="sw pick"></i>In portfolio</span>
       </section>
 
       <details class="targets" id="targets"></details>
     </aside>
 
-    <!-- Center: map -->
-    <section class="map-wrap" aria-label="World map of candidate sites">
-      <div id="map"></div>
-      <div class="map-summary" id="map-summary" aria-live="polite"></div>
-    </section>
-
-    <!-- Right: details -->
-    <aside class="panel details" aria-label="Details">
+    <!-- Right panel: details -->
+    <aside class="col-right" aria-label="Details">
       <nav class="tabs" role="tablist">
-        <button role="tab" type="button" data-tab="portfolio" aria-selected="true">Portfolio</button>
-        <button role="tab" type="button" data-tab="site" aria-selected="false">Site card</button>
-        <button role="tab" type="button" data-tab="validation" aria-selected="false">Validation</button>
+        <button role="tab" type="button" data-tab="portfolio" aria-selected="true"><b>01</b> Portfolio</button>
+        <button role="tab" type="button" data-tab="site" aria-selected="false"><b>02</b> Site</button>
+        <button role="tab" type="button" data-tab="validation" aria-selected="false"><b>03</b> Validation</button>
       </nav>
       <div class="tab-body" id="tab-portfolio" role="tabpanel"></div>
       <div class="tab-body" id="tab-site" role="tabpanel" hidden></div>
@@ -90,21 +101,36 @@
     </aside>
   </main>
 
-  <footer class="footer">
-    <p>
-      Data: <a href="https://power.larc.nasa.gov/">NASA POWER</a> ·
-      <a href="https://modis.ornl.gov/">MODIS MOD13Q1 (ORNL DAAC)</a> ·
+  <!-- Bottom HUD -->
+  <footer class="hud hud-bottom">
+    <div class="readout-block" id="coverage-readout" aria-live="polite"></div>
+    <p class="credits mono">
+      Data <a href="https://power.larc.nasa.gov/">NASA POWER</a> ·
+      <a href="https://modis.ornl.gov/">MODIS MOD13Q1</a> ·
       <a href="https://www.diviner.ucla.edu/">LRO Diviner</a> ·
       <a href="https://pds-geosciences.wustl.edu/missions/lro/lola.htm">LRO LOLA</a> ·
       <a href="https://pds-geosciences.wustl.edu/missions/mgs/mola.html">MGS MOLA</a> ·
       <a href="https://mars.nasa.gov/mars2020/spacecraft/instruments/meda/">Perseverance MEDA</a> ·
       <a href="http://www.passc.net/EarthImpactDatabase/">Earth Impact Database</a> ·
-      Map: <a href="https://leafletjs.com/">Leaflet</a>, tiles © Esri, © OpenStreetMap contributors.
+      Globe <a href="https://visibleearth.nasa.gov/collection/1484/blue-marble">NASA Blue Marble</a> via <a href="https://globe.gl/">globe.gl</a>
+      <br />Built for NASA Space Apps 2026 by Team QBIT · Code written with assistance from Claude (Anthropic) <span id="perf" class="perf"></span>
     </p>
-    <p>Built for NASA Space Apps 2026 by Team QBIT. Code written with assistance from Claude (Anthropic). <span id="perf" class="perf"></span></p>
+    <div class="readout-block right" id="cursor-readout"></div>
   </footer>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <dialog class="how" id="how">
+    <p class="mono dim">How TerraTwin works</p>
+    <h2>A portfolio, not a <em>single</em> best match.</h2>
+    <ol>
+      <li><b>Requirements.</b> Each base is broken into 14 testable needs, from extreme cold and polar light to hyperaridity, thin air and Jezero-like lakebeds.</li>
+      <li><b>Scores.</b> 71 Earth sites are scored 0–1 per need, using NASA POWER climate data and cited geology tags.</li>
+      <li><b>Greedy portfolio.</b> Sites are added one at a time by the largest gain in weighted coverage, minus a reachability penalty, until k sites or no real gain.</li>
+      <li><b>Gap list.</b> What no Earth site can test (gravity, vacuum, cosmic radiation, the lunar night) is always shown and never scored.</li>
+    </ol>
+    <form method="dialog"><button class="btn signal">Close</button></form>
+  </dialog>
+
+  <script src="https://cdn.jsdelivr.net/npm/globe.gl@2.46.2/dist/globe.gl.min.js"></script>
   <script type="module" src="js/app.js"></script>
 </body>
 </html>

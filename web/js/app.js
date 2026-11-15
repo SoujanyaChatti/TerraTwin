@@ -1,25 +1,29 @@
-// TerraTwin UI: controls, Leaflet map, Portfolio / Site card / Validation tabs.
+// TerraTwin UI: controls, 3D globe (globe.gl), Portfolio / Site card / Validation tabs.
 import {
   scoreAll, requirementsForMission, presetWeights, greedyPortfolio, statusOf,
   isDualUse, rankSites, validateKnownAnalogs,
 } from "./engine.js";
 
-/* global L */
+/* global Globe */
 
 const MISSION_LABEL = { moon: "Moon", mars: "Mars", both: "Moon + Mars" };
+const HERO_WORD = { moon: "Moon.", mars: "Mars.", both: "Moon. Or Mars." };
 const STATUS_ICON = { covered: "✓", partial: "◐", gap: "✕" };
 const DEFAULTS = { mission: "both", preset: "balanced", k: 5, lambda: 0.1, newOnly: false };
 
 const state = { ...DEFAULTS, weights: null, selected: null, tab: "portfolio" };
 let DATA, SCORES, REQS, REQ_BY_ID, SITE_BY_ID, DUAL, VALIDATION;
-let map, smallLayer, pickLayer, lastResult;
-const smallMarkers = {};
+let globe = null;
+let lastResult = null;
+const pins = {}; // siteId -> HTMLElement
 
 const $ = (sel) => document.querySelector(sel);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const fmt = (x, nd = 2) => (x === null || x === undefined ? "–" : Number(x).toFixed(nd));
-const pct = (x) => `${Math.round(x * 100)}%`;
-const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const pct = (x) => Math.round(x * 100);
+const pad2 = (n) => String(n).padStart(2, "0");
+const latStr = (lat) => `${Math.abs(lat).toFixed(2).padStart(5, "0")}°${lat >= 0 ? "N" : "S"}`;
+const lonStr = (lon) => `${Math.abs(lon).toFixed(2).padStart(6, "0")}°${lon >= 0 ? "E" : "W"}`;
 
 /* ---------- boot ---------- */
 
@@ -42,9 +46,12 @@ async function boot() {
   readHash();
   if (!state.weights) state.weights = presetWeights(DATA.presets[state.preset] || DATA.presets.balanced, REQS);
 
+  const generated = DATA.generated ? DATA.generated.slice(0, 10) : "";
+  $("#data-readout").innerHTML = `${DATA.sites.length} sites · ${REQS.length} requirements · NASA POWER ${esc(generated)}`;
+
   buildControls();
   buildTargets();
-  buildMap();
+  buildGlobe();
   renderValidation();
   update();
   if (state.selected && SITE_BY_ID[state.selected]) renderSite(state.selected);
@@ -100,7 +107,6 @@ function readHash() {
 /* ---------- controls ---------- */
 
 function buildControls() {
-  // Mission toggle
   $("#mission").addEventListener("click", (e) => {
     const b = e.target.closest("button[data-value]");
     if (!b) return;
@@ -109,7 +115,6 @@ function buildControls() {
     update();
   });
 
-  // Presets
   const sel = $("#preset");
   sel.innerHTML =
     Object.entries(DATA.presets).map(([id, p]) => `<option value="${esc(id)}">${esc(p.label)}</option>`).join("") +
@@ -121,10 +126,9 @@ function buildControls() {
     update();
   });
 
-  // Advanced weight sliders
   $("#weights").innerHTML = REQS.map((r) => `
     <div class="weight-row" data-req="${r.id}">
-      <label class="wname" for="w-${r.id}" title="${esc(r.name)}">${r.id} ${esc(r.name)}</label>
+      <label class="wname" for="w-${r.id}" title="${esc(r.name)}"><b>${r.id}</b>${esc(r.name)}</label>
       <input type="range" id="w-${r.id}" min="0" max="3" step="1" />
       <output id="w-${r.id}-out"></output>
     </div>`).join("");
@@ -141,7 +145,6 @@ function buildControls() {
   $("#lambda").addEventListener("input", (e) => { state.lambda = Number(e.target.value); syncControls(); update(); });
   $("#new-only").addEventListener("change", (e) => { state.newOnly = e.target.checked; update(); });
 
-  // Tabs
   document.querySelector(".tabs").addEventListener("click", (e) => {
     const b = e.target.closest("button[data-tab]");
     if (b) selectTab(b.dataset.tab);
@@ -151,12 +154,13 @@ function buildControls() {
     writeHash();
     try {
       await navigator.clipboard.writeText(location.href);
-      flash($("#copy-link"), "Copied!");
+      flash($("#copy-link"), "Copied");
     } catch {
       prompt("Copy this link:", location.href);
     }
   });
   $("#export-csv").addEventListener("click", exportCsv);
+  $("#how-link").addEventListener("click", () => $("#how").showModal());
 
   syncControls();
 }
@@ -169,9 +173,10 @@ function flash(btn, text) {
 
 function syncControls() {
   document.querySelectorAll("#mission button").forEach((b) => b.setAttribute("aria-checked", String(b.dataset.value === state.mission)));
+  $("#hero-word").textContent = HERO_WORD[state.mission];
   $("#preset").value = state.preset;
   $("#k").value = state.k;
-  $("#k-out").textContent = state.k;
+  $("#k-out").textContent = pad2(state.k);
   $("#lambda").value = state.lambda;
   $("#lambda-out").textContent = state.lambda.toFixed(2);
   $("#new-only").checked = state.newOnly;
@@ -190,54 +195,112 @@ function selectTab(tab) {
   state.tab = tab;
   document.querySelectorAll(".tabs button").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.tab === tab)));
   for (const t of ["portfolio", "site", "validation"]) $(`#tab-${t}`).hidden = t !== tab;
-  if (tab === "site" && !state.selected) $("#tab-site").innerHTML = `<p class="empty">Click a marker on the map or a site in the portfolio to open its card.</p>`;
+  if (tab === "site" && !state.selected) $("#tab-site").innerHTML = `<p class="empty">Click a site on the globe, or a site in the portfolio, to open its card.</p>`;
   writeHash();
 }
 
 function buildTargets() {
-  const el = $("#targets");
-  el.innerHTML = `<summary>Target environments: Moon south pole vs Jezero</summary>` +
+  $("#targets").innerHTML = `<summary class="mono">Target environments · Moon south pole vs Jezero</summary>` +
     Object.values(DATA.targets).map((t) => `
       <div class="target">
         <h4>${esc(t.name)}</h4>
         <p>${esc(t.description)}</p>
-        <dl>${t.facts.map((f) => `<dt>${esc(f.label)}</dt><dd>${esc(f.value)} <span class="sub">(${esc(f.source)})</span></dd>`).join("")}</dl>
-        <p class="sub" style="margin-top:6px">Sources: ${t.citations.map((c) => `<a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.label)}</a>`).join(" · ")}</p>
+        <dl>${t.facts.map((f) => `<dt>${esc(f.label)}</dt><dd>${esc(f.value)} <span class="src">${esc(f.source)}</span></dd>`).join("")}</dl>
+        <p class="src" style="margin-top:10px">Sources: ${t.citations.map((c) => `<a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.label)}</a>`).join(" · ")}</p>
       </div>`).join("");
 }
 
-/* ---------- map ---------- */
+/* ---------- globe ---------- */
 
-function buildMap() {
-  map = L.map("map", { worldCopyJump: true, minZoom: 1, zoomSnap: 0.25, zoomControl: true });
-  map.fitBounds(DATA.sites.map((s) => [s.lat, s.lon]), { padding: [24, 24] });
-  const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  const esri = "https://server.arcgisonline.com/ArcGIS/rest/services";
-  const base = L.tileLayer(`${esri}/Canvas/World_${dark ? "Dark" : "Light"}_Gray_Base/MapServer/tile/{z}/{y}/{x}`, {
-    attribution: "Tiles &copy; Esri, HERE, Garmin, &copy; OpenStreetMap contributors", maxZoom: 16,
-  });
-  const imagery = L.tileLayer(`${esri}/World_Imagery/MapServer/tile/{z}/{y}/{x}`, {
-    attribution: "Imagery &copy; Esri, Maxar, Earthstar Geographics", maxZoom: 18,
-  });
-  base.addTo(map);
-  L.control.layers({ Map: base, Satellite: imagery }, null, { position: "topright" }).addTo(map);
-
-  smallLayer = L.layerGroup().addTo(map);
-  pickLayer = L.layerGroup().addTo(map);
-  for (const s of DATA.sites) {
-    const m = L.circleMarker([s.lat, s.lon], { radius: 5, weight: 1.5, fillOpacity: 0.85 })
-      .bindTooltip(`${esc(s.name)} · ${s.is_known_analog ? "Known analog" : "New candidate"}`)
-      .on("click", () => openSite(s.id));
-    m.addTo(smallLayer);
-    smallMarkers[s.id] = m;
+function webglAvailable() {
+  try {
+    const c = document.createElement("canvas");
+    return !!(c.getContext("webgl2") || c.getContext("webgl"));
+  } catch {
+    return false;
   }
 }
 
-function openSite(id) {
+function makePin(site) {
+  const el = document.createElement("button");
+  el.type = "button";
+  el.className = `pin ${site.is_known_analog ? "known" : "new"}`;
+  el.setAttribute("aria-label", `${site.name}, ${site.is_known_analog ? "known analog" : "new candidate"}`);
+  el.innerHTML = `<span class="dot"></span><span class="reticle"></span><span class="tag">${esc(site.name)}</span>`;
+  el.addEventListener("click", (e) => { e.stopPropagation(); openSite(site.id, true); });
+  el.addEventListener("mouseenter", () => showCursor(site));
+  el.addEventListener("mouseleave", () => showCursor(state.selected ? SITE_BY_ID[state.selected] : null));
+  return el;
+}
+
+function buildGlobe() {
+  for (const s of DATA.sites) pins[s.id] = makePin(s);
+  if (typeof Globe !== "function" || !webglAvailable()) {
+    $("#scene-fallback").hidden = false;
+    return;
+  }
+  const host = $("#scene");
+  const light = window.matchMedia("(prefers-color-scheme: light)").matches;
+  globe = new Globe(host, { animateIn: true })
+    .backgroundColor("rgba(0,0,0,0)")
+    .globeImageUrl("img/earth-blue-marble.jpg")
+    .bumpImageUrl("img/earth-topology.png")
+    .showAtmosphere(true)
+    .atmosphereColor(light ? "#7fa9bd" : "#a9c7d3")
+    .atmosphereAltitude(0.16)
+    .htmlElementsData(DATA.sites)
+    .htmlLat("lat")
+    .htmlLng("lon")
+    .htmlAltitude(0.006)
+    .htmlElement((d) => pins[d.id])
+    .ringColor(() => (t) => `rgba(255,106,26,${(1 - t) * 0.9})`)
+    .ringMaxRadius(4.5)
+    .ringPropagationSpeed(2.2)
+    .ringRepeatPeriod(1600)
+    .arcColor(() => ["rgba(255,106,26,0.15)", "rgba(255,106,26,0.95)"])
+    .arcStroke(0.45)
+    .arcDashLength(0.35)
+    .arcDashGap(0.18)
+    .arcDashAnimateTime(2600)
+    .arcAltitudeAutoScale(0.35);
+
+  const controls = globe.controls();
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 0.35;
+  controls.enableDamping = true;
+  controls.minDistance = 140;
+  controls.maxDistance = 600;
+  controls.addEventListener("start", () => (controls.autoRotate = false));
+
+  const resize = () => globe.width(host.clientWidth).height(host.clientHeight);
+  resize();
+  window.addEventListener("resize", resize);
+  globe.pointOfView({ lat: 18, lng: 20, altitude: 2.35 });
+  globe.onGlobeClick(() => { controls.autoRotate = false; });
+}
+
+function flyTo(site) {
+  if (!globe) return;
+  globe.controls().autoRotate = false;
+  globe.pointOfView({ lat: site.lat, lng: site.lon, altitude: 1.55 }, 1100);
+}
+
+function openSite(id, fly = false) {
   state.selected = id;
   renderSite(id);
   selectTab("site");
-  drawPicks(lastResult);
+  drawPins(lastResult);
+  showCursor(SITE_BY_ID[id]);
+  if (fly) flyTo(SITE_BY_ID[id]);
+}
+
+function showCursor(site) {
+  const el = $("#cursor-readout");
+  if (!site) {
+    el.innerHTML = `Drag to rotate · Scroll to zoom<br><b>Click a site</b> to open its card`;
+    return;
+  }
+  el.innerHTML = `<b>${esc(site.name)}</b><br>${latStr(site.lat)} ${lonStr(site.lon)} · <span class="${site.is_known_analog ? "" : "sig"}">${site.is_known_analog ? "Known analog" : "New candidate"}</span>`;
 }
 
 /* ---------- main update ---------- */
@@ -249,50 +312,44 @@ function candidatePool() {
 function update() {
   const t0 = performance.now();
   const reqs = requirementsForMission(REQS, state.mission);
-  const reqIds = reqs.map((r) => r.id);
   lastResult = greedyPortfolio({
-    sites: candidatePool(), scores: SCORES, reqIds, weights: state.weights, k: state.k, lambda: state.lambda,
+    sites: candidatePool(), scores: SCORES, reqIds: reqs.map((r) => r.id), weights: state.weights, k: state.k, lambda: state.lambda,
   });
-  drawSmallMarkers();
-  drawPicks(lastResult);
+  drawPins(lastResult);
+  drawGlobeLayers(lastResult);
   renderPortfolio(lastResult, reqs);
   if (state.selected) renderSite(state.selected);
+  showCursor(state.selected ? SITE_BY_ID[state.selected] : null);
   writeHash();
-  const ms = performance.now() - t0;
-  $("#perf").textContent = `· updated in ${ms.toFixed(0)} ms`;
+  $("#perf").textContent = `· updated in ${(performance.now() - t0).toFixed(0)} ms`;
 }
 
-function drawSmallMarkers() {
-  const known = css("--known");
-  const nw = css("--new");
-  const small = css("--small");
+function drawPins(result) {
+  const order = new Map((result?.picks || []).map((p, i) => [p.site.id, i]));
   for (const s of DATA.sites) {
-    const excluded = state.newOnly && s.is_known_analog;
-    smallMarkers[s.id].setStyle({
-      color: s.is_known_analog ? known : nw,
-      fillColor: small,
-      opacity: excluded ? 0.25 : 0.95,
-      fillOpacity: excluded ? 0.15 : 0.8,
-    });
+    const el = pins[s.id];
+    const i = order.get(s.id);
+    const isPick = i !== undefined;
+    el.classList.toggle("pick", isPick);
+    el.classList.toggle("dual", DUAL.has(s.id));
+    el.classList.toggle("dim", state.newOnly && s.is_known_analog);
+    el.classList.toggle("selected", state.selected === s.id);
+    el.querySelector(".reticle").textContent = isPick ? pad2(i + 1) : "";
+    el.querySelector(".tag").textContent = isPick ? s.name : s.name;
+    el.style.zIndex = isPick ? String(100 - i) : "1";
   }
 }
 
-function drawPicks(result) {
-  pickLayer.clearLayers();
-  if (!result) return;
-  result.picks.forEach((p, i) => {
-    const s = p.site;
-    const cls = ["pick-marker", s.is_known_analog ? "known" : "new", DUAL.has(s.id) ? "dual" : "", state.selected === s.id ? "selected" : ""].join(" ");
-    L.marker([s.lat, s.lon], {
-      icon: L.divIcon({ className: "", html: `<div class="${cls}">${i + 1}</div>`, iconSize: [30, 30], iconAnchor: [15, 15] }),
-      zIndexOffset: 1000 - i,
-      keyboard: true,
-      title: `${i + 1}. ${s.name}`,
-    })
-      .bindTooltip(`<b>${i + 1}. ${esc(s.name)}</b><br>+${fmt(p.gain)} gain`)
-      .on("click", () => openSite(s.id))
-      .addTo(pickLayer);
-  });
+function drawGlobeLayers(result) {
+  if (!globe) return;
+  const picks = result.picks.map((p) => p.site);
+  globe.ringsData(picks.map((s) => ({ lat: s.lat, lng: s.lon })));
+  globe.ringLat("lat").ringLng("lng");
+  const arcs = [];
+  for (let i = 1; i < picks.length; i++) {
+    arcs.push({ startLat: picks[i - 1].lat, startLng: picks[i - 1].lon, endLat: picks[i].lat, endLng: picks[i].lon });
+  }
+  globe.arcsData(arcs);
 }
 
 /* ---------- Portfolio tab ---------- */
@@ -302,10 +359,12 @@ function renderPortfolio(result, reqs) {
   const activeReqs = reqs.filter((r) => (state.weights[r.id] || 0) > 0);
   const maxGain = Math.max(0.0001, ...result.picks.map((p) => p.gain));
   const missionText = MISSION_LABEL[state.mission];
+  const counts = { covered: 0, partial: 0, gap: 0 };
+  for (const r of activeReqs) counts[statusOf(result.best[r.id]?.score || 0)]++;
 
-  $("#map-summary").innerHTML = n
-    ? `<strong>${n} site${n === 1 ? "" : "s"}</strong> cover <strong>${pct(result.coverage)}</strong> of ${missionText} testable needs`
-    : `No site adds enough coverage. Lower λ or change weights.`;
+  $("#coverage-readout").innerHTML = n
+    ? `<b>${pad2(n)} sites</b> · <span class="sig">${pct(result.coverage)}%</span> of ${missionText} testable needs<br>${counts.covered} covered · ${counts.partial} partial · ${counts.gap} gap · <span class="nocase">λ</span> ${state.lambda.toFixed(2)}`
+    : `<b>No portfolio</b><br>No site adds enough coverage`;
 
   const picksHtml = result.picks.map((p, i) => {
     const s = p.site;
@@ -314,14 +373,14 @@ function renderPortfolio(result, reqs) {
       .map((x) => `<span class="chip ${x.status}" title="${esc(REQ_BY_ID[x.reqId].name)}: ${fmt(x.from)} → ${fmt(x.to)}">${x.reqId} ${STATUS_ICON[x.status]}</span>`).join("");
     return `
       <li class="pick" tabindex="0" data-site="${s.id}">
-        <span class="num ${s.is_known_analog ? "known" : "new"}">${i + 1}</span>
+        <span class="idx ${s.is_known_analog ? "known" : "new"}">${pad2(i + 1)}</span>
         <div>
           <div class="name">${esc(s.name)}</div>
-          <div class="meta">${esc(s.country)} · ${s.is_known_analog ? "Known analog" : "New candidate"} · tier ${s.access_tier}${DUAL.has(s.id) ? " · dual-use" : ""}</div>
+          <div class="meta">${esc(s.country)} · <span class="${s.is_known_analog ? "k" : "n"}">${s.is_known_analog ? "Known analog" : "New candidate"}</span> · T${s.access_tier}${DUAL.has(s.id) ? " · dual-use" : ""}</div>
           <div class="chips">${chips}</div>
         </div>
-        <div class="gain"><b>+${fmt(p.gain)}</b>gain${p.penalty ? `<br><span title="reachability penalty">−${fmt(p.penalty)} access</span>` : ""}
-          <div class="gainbar" style="width:${Math.max(6, (p.gain / maxGain) * 100)}%"></div></div>
+        <div class="gain"><b>+${fmt(p.gain)}</b>${p.penalty ? `−${fmt(p.penalty)} reach` : "gain"}
+          <div class="gainbar" style="width:${Math.max(6, (p.gain / maxGain) * 64)}px"></div></div>
       </li>`;
   }).join("");
 
@@ -333,35 +392,36 @@ function renderPortfolio(result, reqs) {
     return `<li class="${w === 0 ? "off" : ""}" title="${w === 0 ? "Weight 0: ignored" : `weight ${w}`}">
       <span class="status-icon ${st}" aria-label="${st}">${STATUS_ICON[st]}</span>
       <span><span class="rid">${r.id}</span>${esc(r.name)}</span>
-      <span class="who">${who}</span></li>`;
+      <span class="who" title="${who}">${who}</span></li>`;
   }).join("");
-
-  const counts = { covered: 0, partial: 0, gap: 0 };
-  for (const r of activeReqs) counts[statusOf(result.best[r.id]?.score || 0)]++;
 
   const gaps = DATA.gaps.filter((g) => state.mission === "both" || g.missions.includes(state.mission));
 
   $("#tab-portfolio").innerHTML = `
-    <p class="coverage-head"><strong>${n}</strong> site${n === 1 ? "" : "s"} cover <strong>${pct(result.coverage)}</strong> of ${missionText} testable needs</p>
-    <div class="bar" role="img" aria-label="Coverage ${pct(result.coverage)}"><span style="width:${result.coverage * 100}%"></span></div>
-    <p class="sub">${counts.covered} covered · ${counts.partial} partial · ${counts.gap} gap, across ${activeReqs.length} weighted requirements${state.newOnly ? " · new candidates only" : ""}</p>
+    <div class="big">
+      <span class="num">${pct(result.coverage)}<small>%</small></span>
+      <span class="cap">of ${missionText} testable needs covered by <em>${n} site${n === 1 ? "" : "s"}</em>${state.newOnly ? ", new candidates only" : ""}</span>
+    </div>
+    <div class="bar" role="img" aria-label="Coverage ${pct(result.coverage)} percent"><span style="width:${result.coverage * 100}%"></span></div>
+    <div class="tally"><span class="covered"><b>${counts.covered}</b> covered</span><span class="partial"><b>${counts.partial}</b> partial</span><span class="gap"><b>${counts.gap}</b> gap</span><span>of ${activeReqs.length}</span></div>
 
-    <h3>Portfolio, in pick order</h3>
+    <h3 class="sec">Portfolio · pick order</h3>
     ${n ? `<ol class="picks">${picksHtml}</ol>` : `<p class="empty">Empty portfolio.</p>`}
     ${n > 1 ? `<p class="sub">Gain shrinks with each pick: greedy max coverage shows diminishing returns.</p>` : ""}
     ${n < state.k ? `<p class="sub">Stopped at ${n} of ${state.k}: no remaining site adds more than 0.01 to the objective${state.lambda ? " after the reachability penalty" : ""}. Extra sites would only duplicate coverage.</p>` : ""}
 
-    <h3>Requirement checklist</h3>
+    <h3 class="sec">Requirement checklist</h3>
     <ul class="checklist">${checklist}</ul>
     <p class="sub">✓ covered ≥ 0.7 · ◐ partial 0.4–0.7 · ✕ gap &lt; 0.4 (best score in portfolio)</p>
 
     <div class="gapbox">
-      <h3>What Earth can't test</h3>
+      <p class="mono dim" style="margin:0 0 6px">Untestable on Earth</p>
+      <h3>What Earth <em>can't</em> test</h3>
       <ul>${gaps.map((g) => `<li>${esc(g.text)}</li>`).join("")}</ul>
     </div>`;
 
   $("#tab-portfolio").querySelectorAll(".pick").forEach((el) => {
-    const go = () => { openSite(el.dataset.site); map.flyTo([SITE_BY_ID[el.dataset.site].lat, SITE_BY_ID[el.dataset.site].lon], 5, { duration: 0.8 }); };
+    const go = () => openSite(el.dataset.site, true);
     el.addEventListener("click", go);
     el.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
   });
@@ -392,14 +452,14 @@ function renderSite(id) {
       .filter((m) => DATA.targets[m]?.compare?.[req.id])
       .map((m) => `${esc(DATA.targets[m].short)}: ${esc(DATA.targets[m].compare[req.id])}`);
     return `
-      <div class="score-row" style="${inMission ? "" : "opacity:.5"}">
+      <div class="score-row" style="${inMission ? "" : "opacity:.45"}">
         <div class="top">
-          <span class="rname"><span class="rid" style="color:var(--muted);font-size:11px">${req.id}</span> ${esc(req.name)}</span>
+          <span class="rname"><span class="rid">${req.id}</span>${esc(req.name)}</span>
           <span class="rval">${formatValue(req, r)} → <b>${fmt(r.score)}</b></span>
         </div>
         <div class="sbar"><span style="width:${r.score * 100}%;background:var(--${st})"></span></div>
         <div class="cmp">Earth: ${formatValue(req, r)}${targets.length ? ` &nbsp;vs&nbsp; ${targets.join(" · ")}` : ""}</div>
-        <div class="src">Source: ${esc(req.type === "tags" ? `${req.source}; tag from site citation` : req.source)}${req.type === "ramp" ? ` · ramp ${req.zero} → ${req.full} ${esc(req.unit)}` : ""}</div>
+        <div class="src">${esc(req.type === "tags" ? `${req.source}; tag from site citation` : req.source)}${req.type === "ramp" ? ` · ramp ${req.zero} → ${req.full} ${esc(req.unit)}` : ""}</div>
       </div>`;
   }).join("");
 
@@ -408,30 +468,35 @@ function renderSite(id) {
 
   $("#tab-site").innerHTML = `
     <div class="site-head">
+      <p class="mono dim" style="margin:0 0 8px">${esc(s.country)}</p>
       <h2>${esc(s.name)}</h2>
-      <p class="sub">${esc(s.country)} · ${fmt(Math.abs(s.lat), 2)}°${s.lat >= 0 ? "N" : "S"}, ${fmt(Math.abs(s.lon), 2)}°${s.lon >= 0 ? "E" : "W"}</p>
+      <p class="coords">${latStr(s.lat)} &nbsp;${lonStr(s.lon)}</p>
       <div class="badges">
-        <span class="badge ${s.is_known_analog ? "known" : "new"}">${s.is_known_analog ? `Known analog${s.analog_for ? ` (${MISSION_LABEL[s.analog_for]})` : ""}` : "New candidate"}</span>
-        <span class="badge tier">Access tier ${s.access_tier}</span>
+        <span class="badge ${s.is_known_analog ? "known" : "new"}">${s.is_known_analog ? `Known analog${s.analog_for ? ` · ${MISSION_LABEL[s.analog_for]}` : ""}` : "New candidate"}</span>
+        <span class="badge">Access tier ${s.access_tier}</span>
         ${DUAL.has(id) ? `<span class="badge dual">Dual-use</span>` : ""}
-        ${pickIdx >= 0 ? `<span class="badge plain">Portfolio #${pickIdx + 1}</span>` : ""}
+        ${pickIdx >= 0 ? `<span class="badge">Portfolio #${pad2(pickIdx + 1)}</span>` : ""}
       </div>
-      <p class="sub">Overall ${MISSION_LABEL[state.mission]} score <b>${fmt(rank.score)}</b> · rank ${rank.rank} of ${ranked.length} (current weights)</p>
     </div>
-    <p>${esc(s.description)}</p>
-    <p class="sub">Tags: ${s.tags.map((t) => `<span class="chip">${esc(t)}</span>`).join(" ")}</p>
+    <div class="statline">
+      <div><span>${esc(MISSION_LABEL[state.mission])} score</span><b>${fmt(rank.score)}</b></div>
+      <div><span>Rank</span><b>${rank.rank}<small style="font-size:12px;color:var(--bone-3)"> / ${ranked.length}</small></b></div>
+      <div><span>Precip</span><b>${s.features.precip_mm_yr ?? "–"}<small style="font-size:12px;color:var(--bone-3)"> mm</small></b></div>
+    </div>
+    <p class="desc">${esc(s.description)}</p>
+    <div class="chips">${s.tags.map((t) => `<span class="chip">${esc(t)}</span>`).join("")}</div>
 
-    <h3>Per-requirement match</h3>
+    <h3 class="sec">Per-requirement match</h3>
     ${rows}
     <p class="sub">Faded rows are not used for the current mission.</p>
 
-    <h3>Climate profile</h3>
+    <h3 class="sec">Climate profile</h3>
     <table class="feat-table">${feats}</table>
-    <p class="sub">Climate values: NASA POWER climatology for the 0.5° grid cell${s.power_cell ? ` centred near ${fmt(s.power_cell.lat, 2)}, ${fmt(s.power_cell.lon, 2)}` : ""}; cell averages smooth out local extremes (e.g. summits).</p>
+    <p class="sub">NASA POWER climatology for the 0.5° grid cell${s.power_cell ? ` centred near ${fmt(s.power_cell.lat, 2)}, ${fmt(s.power_cell.lon, 2)}` : ""}; cell averages smooth out local extremes such as summits.</p>
 
-    <h3>Sources</h3>
-    <p><a href="${esc(s.citation_url)}" target="_blank" rel="noopener">${esc(s.citation_url)}</a></p>
-    <p class="sub"><a href="https://power.larc.nasa.gov/api/temporal/climatology/point?parameters=T2M,T2M_MIN,T2M_MAX,T2M_RANGE,PRECTOTCORR,ALLSKY_SFC_UV_INDEX,PS,WS10M&community=RE&latitude=${s.lat}&longitude=${s.lon}&format=JSON" target="_blank" rel="noopener">Raw NASA POWER response for this site</a></p>`;
+    <h3 class="sec">Sources</h3>
+    <p style="word-break:break-all"><a href="${esc(s.citation_url)}" target="_blank" rel="noopener">${esc(s.citation_url)}</a></p>
+    <p class="sub"><a href="https://power.larc.nasa.gov/api/temporal/climatology/point?parameters=T2M,T2M_MIN,T2M_MAX,T2M_RANGE,PRECTOTCORR,ALLSKY_SFC_UV_INDEX,PS,WS10M&community=RE&latitude=${s.lat}&longitude=${s.lon}&format=JSON" target="_blank" rel="noopener">Raw NASA POWER response for this site ↗</a></p>`;
 }
 
 /* ---------- Validation tab ---------- */
@@ -441,36 +506,36 @@ function renderValidation() {
   const rows = v.known.map((r) => `
     <tr data-site="${r.site.id}">
       <td>${esc(r.site.name)}</td>
-      <td>${MISSION_LABEL[r.mission]}</td>
+      <td class="for">${MISSION_LABEL[r.mission]}</td>
       <td class="num">${fmt(r.score)}</td>
-      <td class="num">${r.rank} / ${v.n}</td>
+      <td class="num">${pad2(r.rank)} / ${v.n}</td>
       <td class="num">${r.topQuartile ? '<span class="yes">✓</span>' : '<span class="no">–</span>'}</td>
     </tr>`).join("");
 
   const topNew = (m) => v.rankings[m].filter((x) => !x.site.is_known_analog).slice(0, 5)
-    .map((x) => `<li><a href="#" data-site="${x.site.id}">${esc(x.site.name)}</a> <span class="sub">(${esc(x.site.country)}, ${fmt(x.score)}, rank ${x.rank})</span></li>`).join("");
+    .map((x) => `<li><a href="#" data-site="${x.site.id}">${esc(x.site.name)}</a> <span class="sub">${esc(x.site.country)} · ${fmt(x.score)} · rank ${x.rank}</span></li>`).join("");
 
   $("#tab-validation").innerHTML = `
-    <p class="val-head"><strong>${v.inTop} of ${v.total}</strong> known analogs rank in the top 25%</p>
-    <p class="sub">${v.inHalf} of ${v.total} rank in the top half. Each known analog is ranked among all ${v.n} candidates on the mission it is documented for, with Balanced weights. Top-25% cutoff: rank ${v.cutoff}.</p>
+    <div class="big">
+      <span class="num">${v.inTop}<small>/${v.total}</small></span>
+      <span class="cap">known analogs rank in the <em>top 25%</em> of all ${v.n} candidates</span>
+    </div>
+    <div class="bar"><span style="width:${(v.inTop / v.total) * 100}%"></span></div>
+    <p class="sub">${v.inHalf} of ${v.total} rank in the top half. Each analog is ranked on the mission it is documented for (Balanced weights). Top-25% cutoff: rank ${v.cutoff}.</p>
+    <h3 class="sec">Known analogs</h3>
     <table class="val">
-      <thead><tr><th>Known analog</th><th>For</th><th class="num">Score</th><th class="num">Rank</th><th class="num">Top 25%</th></tr></thead>
+      <thead><tr><th>Site</th><th>For</th><th class="num">Score</th><th class="num">Rank</th><th class="num">Top ¼</th></tr></thead>
       <tbody>${rows}</tbody>
     </table>
-    <div class="note">
-      <b>Reading this honestly.</b> Our ${v.n - v.total} new candidates were themselves hand-picked as extreme, analog-like terrain, so this is a hard test: known analogs compete against other strong sites, not ordinary land.
-      Known analogs that rank low were mostly chosen for things TerraTwin does not score: acid-mine chemistry (Rio Tinto), underwater EVA operations (Pavilion Lake), carbonate mineralogy (Svalbard) or habitat logistics (MDRS).
-    </div>
-    <h3>Top new candidates: Moon</h3><ol>${topNew("moon")}</ol>
-    <h3>Top new candidates: Mars</h3><ol>${topNew("mars")}</ol>`;
+    <p class="note"><b>Reading this honestly.</b> The ${v.n - v.total} new candidates were themselves hand-picked as extreme, analog-like terrain, so known analogs compete against strong sites, not ordinary land. Analogs that rank low were mostly chosen for things TerraTwin does not score: acid-mine chemistry (Rio Tinto), underwater EVA operations (Pavilion Lake), carbonate mineralogy (Svalbard) or habitat logistics (MDRS).</p>
+    <h3 class="sec">Top new candidates · Moon</h3><ol class="top-new">${topNew("moon")}</ol>
+    <h3 class="sec">Top new candidates · Mars</h3><ol class="top-new">${topNew("mars")}</ol>`;
 
   $("#tab-validation").addEventListener("click", (e) => {
     const el = e.target.closest("[data-site]");
     if (!el) return;
     e.preventDefault();
-    const s = SITE_BY_ID[el.dataset.site];
-    openSite(s.id);
-    map.flyTo([s.lat, s.lon], 5, { duration: 0.8 });
+    openSite(el.dataset.site, true);
   });
 }
 
