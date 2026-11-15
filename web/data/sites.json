@@ -1,0 +1,2909 @@
+{
+ "generated": "2026-11-15T09:32:37Z",
+ "features": {
+  "t2m_c": {
+   "label": "Mean 2 m temperature",
+   "unit": "°C",
+   "source": "NASA POWER T2M (annual)"
+  },
+  "t2m_min_c": {
+   "label": "Coldest monthly minimum",
+   "unit": "°C",
+   "source": "NASA POWER T2M_MIN (annual)"
+  },
+  "t2m_max_c": {
+   "label": "Hottest monthly maximum",
+   "unit": "°C",
+   "source": "NASA POWER T2M_MAX (annual)"
+  },
+  "t2m_range_c": {
+   "label": "Mean diurnal range",
+   "unit": "°C",
+   "source": "NASA POWER T2M_RANGE (annual)"
+  },
+  "precip_mm_yr": {
+   "label": "Precipitation",
+   "unit": "mm/yr",
+   "source": "NASA POWER PRECTOTCORR (mm/day × 365)"
+  },
+  "uv_mean": {
+   "label": "Mean UV index",
+   "unit": "",
+   "source": "NASA POWER ALLSKY_SFC_UV_INDEX (annual)"
+  },
+  "uv_peak": {
+   "label": "Peak-month UV index",
+   "unit": "",
+   "source": "NASA POWER ALLSKY_SFC_UV_INDEX (max month)"
+  },
+  "ps_kpa": {
+   "label": "Surface pressure",
+   "unit": "kPa",
+   "source": "NASA POWER PS (annual)"
+  },
+  "ws10m": {
+   "label": "Mean 10 m wind speed",
+   "unit": "m/s",
+   "source": "NASA POWER WS10M (annual)"
+  },
+  "elevation_m": {
+   "label": "Elevation (POWER 0.5° cell)",
+   "unit": "m",
+   "source": "NASA POWER grid elevation"
+  },
+  "abs_lat": {
+   "label": "Absolute latitude",
+   "unit": "°",
+   "source": "Site coordinates"
+  }
+ },
+ "requirements": [
+  {
+   "id": "M1",
+   "name": "Extreme cold",
+   "missions": [
+    "moon"
+   ],
+   "type": "ramp",
+   "feature": "t2m_min_c",
+   "unit": "°C",
+   "zero": 0,
+   "full": -40,
+   "measure": "Coldest monthly minimum 2 m air temperature (NASA POWER T2M_MIN climatology)",
+   "source": "NASA POWER T2M_MIN, T2M",
+   "citation": "https://doi.org/10.1126/science.1187726"
+  },
+  {
+   "id": "M2",
+   "name": "Low-angle polar lighting",
+   "missions": [
+    "moon"
+   ],
+   "type": "ramp",
+   "feature": "abs_lat",
+   "unit": "°",
+   "zero": 55,
+   "full": 66.5,
+   "measure": "Absolute latitude; at or above the polar circle the Sun skims the horizon as at the lunar pole",
+   "source": "Site coordinates",
+   "citation": "https://pds-geosciences.wustl.edu/missions/lro/lola.htm"
+  },
+  {
+   "id": "M3",
+   "name": "Regolith analog (basalt or anorthosite)",
+   "missions": [
+    "moon"
+   ],
+   "type": "tags",
+   "primary": [
+    "anorthosite",
+    "basalt"
+   ],
+   "partial": [
+    "volcanic",
+    "tephra"
+   ],
+   "measure": "Lithology tag",
+   "source": "Geologic literature (see site citation)",
+   "citation": "https://doi.org/10.1126/science.1186986"
+  },
+  {
+   "id": "M4",
+   "name": "Impact crater terrain",
+   "missions": [
+    "moon",
+    "mars"
+   ],
+   "type": "tags",
+   "primary": [
+    "impact_crater"
+   ],
+   "partial": [
+    "crater"
+   ],
+   "measure": "Tag impact_crater (confirmed in the Earth Impact Database); volcanic crater = partial",
+   "source": "Earth Impact Database",
+   "citation": "http://www.passc.net/EarthImpactDatabase/"
+  },
+  {
+   "id": "M5",
+   "name": "Ground ice or permafrost",
+   "missions": [
+    "moon",
+    "mars"
+   ],
+   "type": "tags",
+   "primary": [
+    "permafrost",
+    "ground_ice"
+   ],
+   "partial": [
+    "glacier"
+   ],
+   "measure": "Tag permafrost / ground_ice; glacier = partial",
+   "source": "Literature (see site citation)",
+   "citation": "https://doi.org/10.1126/science.1186986"
+  },
+  {
+   "id": "M6",
+   "name": "Lava tubes or caves for shelter",
+   "missions": [
+    "moon",
+    "mars"
+   ],
+   "type": "tags",
+   "primary": [
+    "lava_tube"
+   ],
+   "partial": [
+    "cave"
+   ],
+   "measure": "Tag lava_tube; other caves = partial",
+   "source": "Literature (see site citation)",
+   "citation": "https://doi.org/10.1002/2017GL074998"
+  },
+  {
+   "id": "M7",
+   "name": "Barren, near-lifeless surface",
+   "missions": [
+    "moon",
+    "mars"
+   ],
+   "type": "tags",
+   "primary": [
+    "barren"
+   ],
+   "partial": [
+    "sparse_vegetation"
+   ],
+   "measure": "Tag barren; sparse vegetation = partial (MODIS NDVI is a stretch goal)",
+   "source": "Literature / imagery; MODIS MOD13Q1 planned",
+   "citation": "https://lpdaac.usgs.gov/products/mod13q1v061/"
+  },
+  {
+   "id": "R1",
+   "name": "Hyperaridity",
+   "missions": [
+    "mars"
+   ],
+   "type": "ramp",
+   "feature": "precip_mm_yr",
+   "unit": "mm/yr",
+   "zero": 250,
+   "full": 25,
+   "measure": "Annual precipitation (NASA POWER PRECTOTCORR, mm/day x 365)",
+   "source": "NASA POWER PRECTOTCORR",
+   "citation": "https://doi.org/10.1126/science.1089143"
+  },
+  {
+   "id": "R2",
+   "name": "High UV exposure",
+   "missions": [
+    "mars"
+   ],
+   "type": "ramp",
+   "feature": "uv_peak",
+   "unit": "UV index",
+   "zero": 2,
+   "full": 6,
+   "measure": "Peak-month all-sky surface UV index (NASA POWER ALLSKY_SFC_UV_INDEX, 24 h mean)",
+   "source": "NASA POWER ALLSKY_SFC_UV_INDEX",
+   "citation": "https://power.larc.nasa.gov/docs/"
+  },
+  {
+   "id": "R3",
+   "name": "Low air pressure",
+   "missions": [
+    "mars"
+   ],
+   "type": "ramp",
+   "feature": "ps_kpa",
+   "unit": "kPa",
+   "zero": 95,
+   "full": 60,
+   "measure": "Annual mean surface pressure (NASA POWER PS)",
+   "source": "NASA POWER PS",
+   "citation": "https://doi.org/10.1038/s41561-022-01084-0"
+  },
+  {
+   "id": "R4",
+   "name": "Large daily temperature swing",
+   "missions": [
+    "moon",
+    "mars"
+   ],
+   "type": "ramp",
+   "feature": "t2m_range_c",
+   "unit": "°C",
+   "zero": 8,
+   "full": 20,
+   "measure": "Annual mean diurnal 2 m temperature range (NASA POWER T2M_RANGE)",
+   "source": "NASA POWER T2M_RANGE",
+   "citation": "https://doi.org/10.1038/s41561-022-01084-0"
+  },
+  {
+   "id": "R5",
+   "name": "Iron-rich basalt or volcanic terrain",
+   "missions": [
+    "mars"
+   ],
+   "type": "tags",
+   "primary": [
+    "basalt",
+    "volcanic"
+   ],
+   "partial": [
+    "iron_rich",
+    "tephra"
+   ],
+   "measure": "Tag basalt / volcanic; iron-rich sediments or tephra = partial",
+   "source": "Literature (see site citation)",
+   "citation": "https://doi.org/10.1126/science.abo2196"
+  },
+  {
+   "id": "R6",
+   "name": "Ancient lakebed or evaporites (Jezero-like)",
+   "missions": [
+    "mars"
+   ],
+   "type": "tags",
+   "primary": [
+    "paleolake",
+    "evaporite"
+   ],
+   "partial": [
+    "hydrothermal",
+    "sediment"
+   ],
+   "measure": "Tag paleolake / evaporite; hydrothermal or lake sediments = partial",
+   "source": "Literature (see site citation)",
+   "citation": "https://doi.org/10.1126/science.abo2196"
+  },
+  {
+   "id": "R7",
+   "name": "Dust and wind",
+   "missions": [
+    "moon",
+    "mars"
+   ],
+   "type": "ramp",
+   "feature": "ws10m",
+   "unit": "m/s",
+   "zero": 2,
+   "full": 8,
+   "measure": "Annual mean 10 m wind speed (NASA POWER WS10M)",
+   "source": "NASA POWER WS10M",
+   "citation": "https://doi.org/10.1038/s41561-022-01084-0"
+  }
+ ],
+ "presets": {
+  "balanced": {
+   "label": "Balanced",
+   "emphasis": []
+  },
+  "rover": {
+   "label": "Rover and mobility testing",
+   "emphasis": [
+    "M3",
+    "M4",
+    "R5",
+    "R7"
+   ]
+  },
+  "habitat": {
+   "label": "Habitat and isolation",
+   "emphasis": [
+    "M1",
+    "M2",
+    "M6",
+    "R3"
+   ]
+  },
+  "isru": {
+   "label": "ISRU and ice extraction",
+   "emphasis": [
+    "M5",
+    "M3",
+    "R6"
+   ]
+  },
+  "astrobio": {
+   "label": "Astrobiology and sample science",
+   "emphasis": [
+    "R1",
+    "R2",
+    "R6",
+    "M7"
+   ]
+  }
+ },
+ "gaps": [
+  {
+   "text": "1/6 g (Moon) and 0.38 g (Mars) gravity",
+   "missions": [
+    "moon",
+    "mars"
+   ]
+  },
+  {
+   "text": "Hard vacuum (Moon) and a 0.6 kPa CO2 atmosphere (Mars)",
+   "missions": [
+    "moon",
+    "mars"
+   ]
+  },
+  {
+   "text": "Permanently shadowed regions near 40 K",
+   "missions": [
+    "moon"
+   ]
+  },
+  {
+   "text": "Sharp, electrostatically charged lunar dust",
+   "missions": [
+    "moon"
+   ]
+  },
+  {
+   "text": "Galactic cosmic radiation and solar particle events",
+   "missions": [
+    "moon",
+    "mars"
+   ]
+  },
+  {
+   "text": "The two-week lunar night",
+   "missions": [
+    "moon"
+   ]
+  }
+ ],
+ "targets": {
+  "moon": {
+   "name": "Moon south pole (Shackleton rim / Artemis III candidate regions)",
+   "short": "Moon south pole",
+   "description": "Ridges and crater rims near the lunar south pole get near-continuous but grazing sunlight, while nearby permanently shadowed craters are among the coldest places in the Solar System and trap water ice. Surface is anorthositic highland regolith with heavy impact cratering.",
+   "facts": [
+    {
+     "label": "Surface temperature (sunlit rims)",
+     "value": "about −50 to −170 °C",
+     "source": "LRO Diviner"
+    },
+    {
+     "label": "Surface temperature (permanently shadowed craters)",
+     "value": "as low as ~25–40 K (about −248 to −233 °C)",
+     "source": "LRO Diviner (Paige et al. 2010)"
+    },
+    {
+     "label": "Sun elevation",
+     "value": "≤ ~1.5° above the horizon (1.54° axial tilt)",
+     "source": "LRO LOLA illumination models"
+    },
+    {
+     "label": "Atmosphere",
+     "value": "none (exosphere ~10⁻¹³ kPa)",
+     "source": "LADEE / Apollo surface measurements"
+    },
+    {
+     "label": "Water ice",
+     "value": "~5.6 ± 2.9 wt% in Cabeus regolith",
+     "source": "LCROSS (Colaprete et al. 2010)"
+    },
+    {
+     "label": "Terrain",
+     "value": "rugged crater rims, slopes often > 15°",
+     "source": "LRO LOLA"
+    }
+   ],
+   "compare": {
+    "M1": "PSR ~ −240 °C; sunlit rims ~ −170 °C at night",
+    "M2": "Pole: Sun ≤ 1.5° elevation",
+    "M3": "Anorthositic highland regolith",
+    "M4": "Heavily cratered (Shackleton, de Gerlache, Cabeus)",
+    "M5": "Water ice in permanently shadowed craters",
+    "M6": "Lunar pits/lava tubes known at lower latitudes",
+    "M7": "Sterile",
+    "R4": "Swings of > 100 °C between light and shadow",
+    "R7": "No wind; dust lofted electrostatically"
+   },
+   "citations": [
+    {
+     "label": "LRO Diviner Lunar Radiometer",
+     "url": "https://www.diviner.ucla.edu/"
+    },
+    {
+     "label": "LRO LOLA",
+     "url": "https://pds-geosciences.wustl.edu/missions/lro/lola.htm"
+    },
+    {
+     "label": "Paige et al. 2010, Science (Diviner cold traps)",
+     "url": "https://doi.org/10.1126/science.1187726"
+    },
+    {
+     "label": "Colaprete et al. 2010, Science (LCROSS water)",
+     "url": "https://doi.org/10.1126/science.1186986"
+    }
+   ]
+  },
+  "mars": {
+   "name": "Mars, Jezero Crater (Perseverance landing site)",
+   "short": "Mars Jezero",
+   "description": "A 45 km impact crater that once held a lake, with a preserved river delta, lakebed sediments and a basaltic, olivine- and carbonate-bearing floor. Thin CO2 atmosphere, no ozone layer, large daily temperature swings and frequent dust devils.",
+   "facts": [
+    {
+     "label": "Surface pressure",
+     "value": "about 0.6–0.76 kPa (seasonal)",
+     "source": "Perseverance MEDA"
+    },
+    {
+     "label": "Air temperature",
+     "value": "about −85 °C (night) to ~0 °C (day)",
+     "source": "Perseverance MEDA"
+    },
+    {
+     "label": "Daily temperature swing",
+     "value": "about 60–80 °C",
+     "source": "Perseverance MEDA"
+    },
+    {
+     "label": "Wind",
+     "value": "typically 2–10 m/s, frequent dust devils",
+     "source": "Perseverance MEDA"
+    },
+    {
+     "label": "Elevation",
+     "value": "about −2.6 km relative to Mars datum",
+     "source": "MGS MOLA"
+    },
+    {
+     "label": "Geology",
+     "value": "basaltic floor (Máaz), olivine cumulate (Séítah), delta and lake sediments",
+     "source": "Farley et al. 2022"
+    }
+   ],
+   "compare": {
+    "M4": "Jezero itself is a 45 km impact crater",
+    "M5": "Ground ice at mid/high latitudes",
+    "M6": "Lava tubes and pits on Tharsis",
+    "M7": "No known life",
+    "R1": "Hyperarid: no liquid precipitation",
+    "R2": "Unfiltered UV-C (no ozone layer)",
+    "R3": "~0.6–0.76 kPa",
+    "R4": "~60–80 °C daily swing",
+    "R5": "Basaltic, iron-rich floor",
+    "R6": "Delta + lakebed sediments, carbonates",
+    "R7": "2–10 m/s, dust devils, global dust storms"
+   },
+   "citations": [
+    {
+     "label": "Rodriguez-Manfredi et al. 2023, Nature Geoscience (MEDA)",
+     "url": "https://doi.org/10.1038/s41561-022-01084-0"
+    },
+    {
+     "label": "Farley et al. 2022, Science (Jezero floor)",
+     "url": "https://doi.org/10.1126/science.abo2196"
+    },
+    {
+     "label": "MGS MOLA (PDS Geosciences)",
+     "url": "https://pds-geosciences.wustl.edu/missions/mgs/mola.html"
+    },
+    {
+     "label": "Mars 2020 Perseverance",
+     "url": "https://science.nasa.gov/mission/mars-2020-perseverance/"
+    }
+   ]
+  }
+ },
+ "sites": [
+  {
+   "id": "atacama_yungay",
+   "name": "Atacama Desert (Yungay)",
+   "country": "Chile",
+   "lat": -24.08,
+   "lon": -69.93,
+   "tags": [
+    "barren",
+    "evaporite",
+    "sediment"
+   ],
+   "is_known_analog": true,
+   "access_tier": 2,
+   "description": "Hyperarid core of the Atacama; soils so dry and oxidizing that Viking-style life-detection experiments returned Mars-like results.",
+   "citation_url": "https://doi.org/10.1126/science.1089143",
+   "features": {
+    "t2m_c": 17.07,
+    "t2m_min_c": -0.64,
+    "t2m_max_c": 32.93,
+    "t2m_range_c": 14.74,
+    "precip_mm_yr": 7.0,
+    "uv_mean": 2.64,
+    "uv_peak": 4.03,
+    "ps_kpa": 87.5,
+    "ws10m": 3.03,
+    "elevation_m": 1261.0,
+    "abs_lat": 24.08
+   },
+   "power_cell": {
+    "lon": -69.93,
+    "lat": -24.08
+   }
+  },
+  {
+   "id": "haughton",
+   "name": "Haughton Crater (Devon Island)",
+   "country": "Canada",
+   "lat": 75.38,
+   "lon": -89.67,
+   "tags": [
+    "impact_crater",
+    "permafrost",
+    "ground_ice",
+    "barren",
+    "paleolake"
+   ],
+   "is_known_analog": true,
+   "access_tier": 3,
+   "description": "23 km impact crater in a polar desert; home of the NASA Haughton-Mars Project and the FMARS habitat.",
+   "citation_url": "https://en.wikipedia.org/wiki/Haughton%E2%80%93Mars_Project",
+   "features": {
+    "t2m_c": -14.42,
+    "t2m_min_c": -48.55,
+    "t2m_max_c": 16.81,
+    "t2m_range_c": 4.64,
+    "precip_mm_yr": 310.0,
+    "uv_mean": 0.32,
+    "uv_peak": 1.15,
+    "ps_kpa": 99.06,
+    "ws10m": 4.11,
+    "elevation_m": 173.0,
+    "abs_lat": 75.38
+   },
+   "power_cell": {
+    "lon": -89.67,
+    "lat": 75.38
+   }
+  },
+  {
+   "id": "death_valley",
+   "name": "Death Valley",
+   "country": "USA",
+   "lat": 36.46,
+   "lon": -116.87,
+   "tags": [
+    "evaporite",
+    "paleolake",
+    "barren",
+    "crater"
+   ],
+   "is_known_analog": true,
+   "access_tier": 1,
+   "description": "Hot, dry basin with Pleistocene Lake Manly evaporites and the Ubehebe volcanic crater; used to test Mars rover and instrument concepts.",
+   "citation_url": "https://en.wikipedia.org/wiki/Death_Valley",
+   "features": {
+    "t2m_c": 19.1,
+    "t2m_min_c": -6.16,
+    "t2m_max_c": 46.22,
+    "t2m_range_c": 14.65,
+    "precip_mm_yr": 124.0,
+    "uv_mean": 1.48,
+    "uv_peak": 2.6,
+    "ps_kpa": 91.73,
+    "ws10m": 2.97,
+    "elevation_m": 846.0,
+    "abs_lat": 36.46
+   },
+   "power_cell": {
+    "lon": -116.87,
+    "lat": 36.46
+   }
+  },
+  {
+   "id": "dry_valleys",
+   "name": "McMurdo Dry Valleys",
+   "country": "Antarctica",
+   "lat": -77.5,
+   "lon": 162.0,
+   "tags": [
+    "permafrost",
+    "ground_ice",
+    "barren",
+    "paleolake",
+    "evaporite"
+   ],
+   "is_known_analog": true,
+   "access_tier": 3,
+   "description": "Coldest, driest ice-free terrain on Earth; ground ice, saline ponds and polygons used as a Mars analog for decades.",
+   "citation_url": "https://en.wikipedia.org/wiki/McMurdo_Dry_Valleys",
+   "features": {
+    "t2m_c": -27.23,
+    "t2m_min_c": -52.01,
+    "t2m_max_c": -3.79,
+    "t2m_range_c": 5.61,
+    "precip_mm_yr": 80.0,
+    "uv_mean": 0.55,
+    "uv_peak": 1.94,
+    "ps_kpa": 85.12,
+    "ws10m": 7.04,
+    "elevation_m": 1139.0,
+    "abs_lat": 77.5
+   },
+   "power_cell": {
+    "lon": 162.0,
+    "lat": -77.5
+   }
+  },
+  {
+   "id": "mauna_kea",
+   "name": "Mauna Kea",
+   "country": "USA",
+   "lat": 19.82,
+   "lon": -155.47,
+   "tags": [
+    "basalt",
+    "volcanic",
+    "tephra",
+    "barren",
+    "permafrost"
+   ],
+   "is_known_analog": true,
+   "access_tier": 2,
+   "description": "High basaltic volcano with tephra fields; site of NASA/PISCES lunar ISRU field tests in 2010 and 2012.",
+   "citation_url": "https://en.wikipedia.org/wiki/Pacific_International_Space_Center_for_Exploration_Systems",
+   "features": {
+    "t2m_c": 20.9,
+    "t2m_min_c": 12.75,
+    "t2m_max_c": 28.67,
+    "t2m_range_c": 5.2,
+    "precip_mm_yr": 1610.0,
+    "uv_mean": 1.98,
+    "uv_peak": 2.55,
+    "ps_kpa": 94.53,
+    "ws10m": 4.83,
+    "elevation_m": 636.0,
+    "abs_lat": 19.82
+   },
+   "power_cell": {
+    "lon": -155.47,
+    "lat": 19.82
+   }
+  },
+  {
+   "id": "mdrs_utah",
+   "name": "Mars Desert Research Station",
+   "country": "USA",
+   "lat": 38.41,
+   "lon": -110.79,
+   "tags": [
+    "barren",
+    "sediment",
+    "iron_rich"
+   ],
+   "is_known_analog": true,
+   "access_tier": 1,
+   "description": "Mars Society simulation habitat amid red Jurassic sediments near Hanksville, Utah.",
+   "citation_url": "https://en.wikipedia.org/wiki/Mars_Desert_Research_Station",
+   "features": {
+    "t2m_c": 11.75,
+    "t2m_min_c": -19.96,
+    "t2m_max_c": 41.12,
+    "t2m_range_c": 13.64,
+    "precip_mm_yr": 241.0,
+    "uv_mean": 1.44,
+    "uv_peak": 2.62,
+    "ps_kpa": 83.37,
+    "ws10m": 3.56,
+    "elevation_m": 1660.0,
+    "abs_lat": 38.41
+   },
+   "power_cell": {
+    "lon": -110.79,
+    "lat": 38.41
+   }
+  },
+  {
+   "id": "rio_tinto",
+   "name": "Rio Tinto",
+   "country": "Spain",
+   "lat": 37.72,
+   "lon": -6.55,
+   "tags": [
+    "iron_rich",
+    "hydrothermal",
+    "sediment"
+   ],
+   "is_known_analog": true,
+   "access_tier": 1,
+   "description": "Acidic, iron-rich river system analogous to Meridiani jarosite deposits; NASA MARTE drilling site.",
+   "citation_url": "https://en.wikipedia.org/wiki/Rio_Tinto_(river)",
+   "features": {
+    "t2m_c": 18.01,
+    "t2m_min_c": -4.61,
+    "t2m_max_c": 46.26,
+    "t2m_range_c": 13.45,
+    "precip_mm_yr": 467.0,
+    "uv_mean": 1.22,
+    "uv_peak": 2.33,
+    "ps_kpa": 99.51,
+    "ws10m": 3.61,
+    "elevation_m": 188.0,
+    "abs_lat": 37.72
+   },
+   "power_cell": {
+    "lon": -6.55,
+    "lat": 37.72
+   }
+  },
+  {
+   "id": "svalbard_bockfjord",
+   "name": "Svalbard (Bockfjord)",
+   "country": "Norway",
+   "lat": 79.42,
+   "lon": 13.33,
+   "tags": [
+    "volcanic",
+    "basalt",
+    "permafrost",
+    "ground_ice",
+    "hydrothermal",
+    "glacier"
+   ],
+   "is_known_analog": true,
+   "access_tier": 3,
+   "description": "Arctic volcanic complex with carbonate globules like those in Martian meteorite ALH84001; AMASE expedition site.",
+   "citation_url": "https://en.wikipedia.org/wiki/Sverrefjellet",
+   "features": {
+    "t2m_c": -7.62,
+    "t2m_min_c": -40.09,
+    "t2m_max_c": 11.85,
+    "t2m_range_c": 3.57,
+    "precip_mm_yr": 664.0,
+    "uv_mean": 0.27,
+    "uv_peak": 0.97,
+    "ps_kpa": 96.67,
+    "ws10m": 4.4,
+    "elevation_m": 343.0,
+    "abs_lat": 79.42
+   },
+   "power_cell": {
+    "lon": 13.33,
+    "lat": 79.42
+   }
+  },
+  {
+   "id": "meteor_crater",
+   "name": "Meteor Crater",
+   "country": "USA",
+   "lat": 35.03,
+   "lon": -111.02,
+   "tags": [
+    "impact_crater",
+    "barren",
+    "sparse_vegetation"
+   ],
+   "is_known_analog": true,
+   "access_tier": 1,
+   "description": "Young 1.2 km impact crater in Arizona used for Apollo astronaut geology training.",
+   "citation_url": "https://en.wikipedia.org/wiki/Meteor_Crater",
+   "features": {
+    "t2m_c": 11.36,
+    "t2m_min_c": -22.36,
+    "t2m_max_c": 37.83,
+    "t2m_range_c": 14.49,
+    "precip_mm_yr": 416.0,
+    "uv_mean": 1.6,
+    "uv_peak": 2.8,
+    "ps_kpa": 80.94,
+    "ws10m": 3.9,
+    "elevation_m": 1915.0,
+    "abs_lat": 35.03
+   },
+   "power_cell": {
+    "lon": -111.02,
+    "lat": 35.03
+   }
+  },
+  {
+   "id": "craters_of_the_moon",
+   "name": "Craters of the Moon",
+   "country": "USA",
+   "lat": 43.42,
+   "lon": -113.52,
+   "tags": [
+    "basalt",
+    "volcanic",
+    "lava_tube",
+    "barren",
+    "sparse_vegetation"
+   ],
+   "is_known_analog": true,
+   "access_tier": 1,
+   "description": "Basaltic lava fields and tubes in Idaho; Apollo 14 geology training and NASA FINESSE field site.",
+   "citation_url": "https://en.wikipedia.org/wiki/Craters_of_the_Moon_National_Monument_and_Preserve",
+   "features": {
+    "t2m_c": 5.69,
+    "t2m_min_c": -32.62,
+    "t2m_max_c": 36.91,
+    "t2m_range_c": 12.35,
+    "precip_mm_yr": 416.0,
+    "uv_mean": 1.14,
+    "uv_peak": 2.41,
+    "ps_kpa": 80.96,
+    "ws10m": 3.37,
+    "elevation_m": 1892.0,
+    "abs_lat": 43.42
+   },
+   "power_cell": {
+    "lon": -113.52,
+    "lat": 43.42
+   }
+  },
+  {
+   "id": "lanzarote",
+   "name": "Lanzarote lava tubes",
+   "country": "Spain",
+   "lat": 29.16,
+   "lon": -13.43,
+   "tags": [
+    "lava_tube",
+    "basalt",
+    "volcanic",
+    "barren"
+   ],
+   "is_known_analog": true,
+   "access_tier": 1,
+   "description": "La Corona lava tube system; used for ESA PANGAEA and CAVES astronaut training.",
+   "citation_url": "https://en.wikipedia.org/wiki/Cueva_de_los_Verdes",
+   "features": {
+    "t2m_c": 19.86,
+    "t2m_min_c": 13.38,
+    "t2m_max_c": 27.37,
+    "t2m_range_c": 0.99,
+    "precip_mm_yr": 110.0,
+    "uv_mean": 1.5,
+    "uv_peak": 2.27,
+    "ps_kpa": 101.71,
+    "ws10m": 6.58,
+    "elevation_m": 5.0,
+    "abs_lat": 29.16
+   },
+   "power_cell": {
+    "lon": -13.43,
+    "lat": 29.16
+   }
+  },
+  {
+   "id": "iceland_askja",
+   "name": "Iceland lava fields (Askja)",
+   "country": "Iceland",
+   "lat": 65.03,
+   "lon": -16.75,
+   "tags": [
+    "basalt",
+    "volcanic",
+    "tephra",
+    "barren",
+    "crater",
+    "glacier"
+   ],
+   "is_known_analog": true,
+   "access_tier": 2,
+   "description": "Basaltic caldera and tephra plains in the highlands where Apollo astronauts trained in 1965 and 1967.",
+   "citation_url": "https://en.wikipedia.org/wiki/Askja",
+   "features": {
+    "t2m_c": -2.84,
+    "t2m_min_c": -23.83,
+    "t2m_max_c": 10.31,
+    "t2m_range_c": 4.1,
+    "precip_mm_yr": 861.0,
+    "uv_mean": 0.43,
+    "uv_peak": 1.2,
+    "ps_kpa": 91.1,
+    "ws10m": 6.3,
+    "elevation_m": 802.0,
+    "abs_lat": 65.03
+   },
+   "power_cell": {
+    "lon": -16.75,
+    "lat": 65.03
+   }
+  },
+  {
+   "id": "ladakh_tsokar",
+   "name": "Ladakh (Tso Kar)",
+   "country": "India",
+   "lat": 33.3,
+   "lon": 78.0,
+   "tags": [
+    "evaporite",
+    "paleolake",
+    "permafrost",
+    "sparse_vegetation",
+    "barren"
+   ],
+   "is_known_analog": true,
+   "access_tier": 2,
+   "description": "High-altitude saline lake basin in a cold desert; studied as a Mars analog for evaporites and periglacial landforms.",
+   "citation_url": "https://en.wikipedia.org/wiki/Tso_Kar",
+   "features": {
+    "t2m_c": -6.09,
+    "t2m_min_c": -40.01,
+    "t2m_max_c": 20.99,
+    "t2m_range_c": 12.91,
+    "precip_mm_yr": 226.0,
+    "uv_mean": 1.83,
+    "uv_peak": 3.0,
+    "ps_kpa": 54.77,
+    "ws10m": 3.37,
+    "elevation_m": 5058.0,
+    "abs_lat": 33.3
+   },
+   "power_cell": {
+    "lon": 78.0,
+    "lat": 33.3
+   }
+  },
+  {
+   "id": "qaidam",
+   "name": "Qaidam Basin (Dalangtan)",
+   "country": "China",
+   "lat": 38.5,
+   "lon": 91.5,
+   "tags": [
+    "evaporite",
+    "paleolake",
+    "barren"
+   ],
+   "is_known_analog": true,
+   "access_tier": 2,
+   "description": "Hyperarid, high-altitude playa with sulfate and chloride evaporites; studied as a Mars analog.",
+   "citation_url": "https://en.wikipedia.org/wiki/Qaidam_Basin",
+   "features": {
+    "t2m_c": 3.2,
+    "t2m_min_c": -24.16,
+    "t2m_max_c": 31.52,
+    "t2m_range_c": 13.65,
+    "precip_mm_yr": 51.0,
+    "uv_mean": 1.38,
+    "uv_peak": 2.36,
+    "ps_kpa": 70.58,
+    "ws10m": 3.61,
+    "elevation_m": 3015.0,
+    "abs_lat": 38.5
+   },
+   "power_cell": {
+    "lon": 91.5,
+    "lat": 38.5
+   }
+  },
+  {
+   "id": "pavilion_lake",
+   "name": "Pavilion Lake",
+   "country": "Canada",
+   "lat": 50.87,
+   "lon": -121.74,
+   "tags": [
+    "sediment"
+   ],
+   "is_known_analog": true,
+   "access_tier": 1,
+   "description": "Lake with freshwater microbialites; NASA/CSA Pavilion Lake Research Project tested EVA and science operations.",
+   "citation_url": "https://en.wikipedia.org/wiki/Pavilion_Lake",
+   "features": {
+    "t2m_c": 2.9,
+    "t2m_min_c": -35.98,
+    "t2m_max_c": 32.45,
+    "t2m_range_c": 10.76,
+    "precip_mm_yr": 504.0,
+    "uv_mean": 0.78,
+    "uv_peak": 1.79,
+    "ps_kpa": 86.73,
+    "ws10m": 1.66,
+    "elevation_m": 1298.0,
+    "abs_lat": 50.87
+   },
+   "power_cell": {
+    "lon": -121.74,
+    "lat": 50.87
+   }
+  },
+  {
+   "id": "black_point",
+   "name": "Black Point Lava Flow",
+   "country": "USA",
+   "lat": 35.68,
+   "lon": -111.47,
+   "tags": [
+    "basalt",
+    "volcanic",
+    "barren",
+    "sparse_vegetation"
+   ],
+   "is_known_analog": true,
+   "access_tier": 1,
+   "description": "Basaltic flow in northern Arizona used by NASA Desert RATS for rover and spacesuit field tests.",
+   "citation_url": "https://en.wikipedia.org/wiki/Desert_Research_and_Technology_Studies",
+   "features": {
+    "t2m_c": 13.78,
+    "t2m_min_c": -16.02,
+    "t2m_max_c": 40.98,
+    "t2m_range_c": 15.45,
+    "precip_mm_yr": 339.0,
+    "uv_mean": 1.6,
+    "uv_peak": 2.8,
+    "ps_kpa": 84.07,
+    "ws10m": 3.74,
+    "elevation_m": 1592.0,
+    "abs_lat": 35.68
+   },
+   "power_cell": {
+    "lon": -111.47,
+    "lat": 35.68
+   }
+  },
+  {
+   "id": "lonar",
+   "name": "Lonar Crater",
+   "country": "India",
+   "lat": 19.98,
+   "lon": 76.51,
+   "tags": [
+    "impact_crater",
+    "basalt",
+    "evaporite"
+   ],
+   "is_known_analog": false,
+   "access_tier": 1,
+   "description": "Rare impact crater in Deccan basalt with a saline, alkaline lake; a close analog for craters in Martian basalt.",
+   "citation_url": "https://en.wikipedia.org/wiki/Lonar_Lake",
+   "features": {
+    "t2m_c": 25.96,
+    "t2m_min_c": 6.08,
+    "t2m_max_c": 45.55,
+    "t2m_range_c": 13.12,
+    "precip_mm_yr": 843.0,
+    "uv_mean": 1.81,
+    "uv_peak": 2.53,
+    "ps_kpa": 94.92,
+    "ws10m": 3.67,
+    "elevation_m": 530.0,
+    "abs_lat": 19.98
+   },
+   "power_cell": {
+    "lon": 76.51,
+    "lat": 19.98
+   }
+  },
+  {
+   "id": "rann_kutch",
+   "name": "Rann of Kutch",
+   "country": "India",
+   "lat": 23.9,
+   "lon": 70.0,
+   "tags": [
+    "evaporite",
+    "paleolake",
+    "barren"
+   ],
+   "is_known_analog": false,
+   "access_tier": 1,
+   "description": "Vast seasonal salt marsh; flat evaporite plains comparable to Martian chloride deposits.",
+   "citation_url": "https://en.wikipedia.org/wiki/Rann_of_Kutch",
+   "features": {
+    "t2m_c": 27.67,
+    "t2m_min_c": 3.19,
+    "t2m_max_c": 47.2,
+    "t2m_range_c": 14.3,
+    "precip_mm_yr": 387.0,
+    "uv_mean": 1.69,
+    "uv_peak": 2.4,
+    "ps_kpa": 100.68,
+    "ws10m": 4.43,
+    "elevation_m": 12.0,
+    "abs_lat": 23.9
+   },
+   "power_cell": {
+    "lon": 70.0,
+    "lat": 23.9
+   }
+  },
+  {
+   "id": "spiti",
+   "name": "Spiti Valley",
+   "country": "India",
+   "lat": 32.25,
+   "lon": 78.03,
+   "tags": [
+    "permafrost",
+    "sediment",
+    "sparse_vegetation",
+    "barren",
+    "glacier"
+   ],
+   "is_known_analog": false,
+   "access_tier": 2,
+   "description": "Cold Himalayan desert with periglacial landforms and Tethyan sediments.",
+   "citation_url": "https://en.wikipedia.org/wiki/Spiti_Valley",
+   "features": {
+    "t2m_c": -6.4,
+    "t2m_min_c": -38.18,
+    "t2m_max_c": 19.17,
+    "t2m_range_c": 11.67,
+    "precip_mm_yr": 453.0,
+    "uv_mean": 1.83,
+    "uv_peak": 2.98,
+    "ps_kpa": 55.03,
+    "ws10m": 3.16,
+    "elevation_m": 5030.0,
+    "abs_lat": 32.25
+   },
+   "power_cell": {
+    "lon": 78.03,
+    "lat": 32.25
+   }
+  },
+  {
+   "id": "puga",
+   "name": "Puga Valley",
+   "country": "India",
+   "lat": 33.22,
+   "lon": 78.31,
+   "tags": [
+    "hydrothermal",
+    "evaporite",
+    "permafrost",
+    "sparse_vegetation"
+   ],
+   "is_known_analog": false,
+   "access_tier": 2,
+   "description": "High-altitude hot springs with borax and sulfur deposits in a permafrost setting.",
+   "citation_url": "https://en.wikipedia.org/wiki/Puga_Valley",
+   "features": {
+    "t2m_c": -6.9,
+    "t2m_min_c": -37.68,
+    "t2m_max_c": 19.76,
+    "t2m_range_c": 12.71,
+    "precip_mm_yr": 310.0,
+    "uv_mean": 1.83,
+    "uv_peak": 3.0,
+    "ps_kpa": 54.24,
+    "ws10m": 3.61,
+    "elevation_m": 5137.0,
+    "abs_lat": 33.22
+   },
+   "power_cell": {
+    "lon": 78.31,
+    "lat": 33.22
+   }
+  },
+  {
+   "id": "deccan",
+   "name": "Deccan Traps (Mahabaleshwar)",
+   "country": "India",
+   "lat": 17.92,
+   "lon": 73.66,
+   "tags": [
+    "basalt",
+    "volcanic"
+   ],
+   "is_known_analog": false,
+   "access_tier": 1,
+   "description": "Thick flood-basalt sequence, a compositional analog for Martian and lunar mare basalts.",
+   "citation_url": "https://en.wikipedia.org/wiki/Deccan_Traps",
+   "features": {
+    "t2m_c": 24.16,
+    "t2m_min_c": 7.37,
+    "t2m_max_c": 43.58,
+    "t2m_range_c": 11.85,
+    "precip_mm_yr": 1905.0,
+    "uv_mean": 1.77,
+    "uv_peak": 2.49,
+    "ps_kpa": 94.21,
+    "ws10m": 3.91,
+    "elevation_m": 602.0,
+    "abs_lat": 17.92
+   },
+   "power_cell": {
+    "lon": 73.66,
+    "lat": 17.92
+   }
+  },
+  {
+   "id": "changthang",
+   "name": "Changthang Plateau (Hanle)",
+   "country": "India",
+   "lat": 32.78,
+   "lon": 78.96,
+   "tags": [
+    "permafrost",
+    "sparse_vegetation",
+    "evaporite",
+    "barren"
+   ],
+   "is_known_analog": false,
+   "access_tier": 2,
+   "description": "High cold desert above 4,300 m with saline lakes, low pressure and strong UV.",
+   "citation_url": "https://en.wikipedia.org/wiki/Changtang",
+   "features": {
+    "t2m_c": -5.11,
+    "t2m_min_c": -38.95,
+    "t2m_max_c": 21.27,
+    "t2m_range_c": 13.49,
+    "precip_mm_yr": 193.0,
+    "uv_mean": 1.83,
+    "uv_peak": 2.98,
+    "ps_kpa": 55.08,
+    "ws10m": 3.59,
+    "elevation_m": 5011.0,
+    "abs_lat": 32.78
+   },
+   "power_cell": {
+    "lon": 78.96,
+    "lat": 32.78
+   }
+  },
+  {
+   "id": "dasht_e_lut",
+   "name": "Dasht-e Lut",
+   "country": "Iran",
+   "lat": 30.3,
+   "lon": 59.0,
+   "tags": [
+    "barren",
+    "evaporite",
+    "hyperarid"
+   ],
+   "is_known_analog": false,
+   "access_tier": 2,
+   "description": "One of the hottest, driest surfaces on Earth, with giant yardangs carved by wind like those on Mars.",
+   "citation_url": "https://en.wikipedia.org/wiki/Dasht-e_Lut",
+   "features": {
+    "t2m_c": 26.17,
+    "t2m_min_c": -4.83,
+    "t2m_max_c": 51.8,
+    "t2m_range_c": 15.59,
+    "precip_mm_yr": 80.0,
+    "uv_mean": 1.67,
+    "uv_peak": 2.65,
+    "ps_kpa": 96.34,
+    "ws10m": 4.06,
+    "elevation_m": 401.0,
+    "abs_lat": 30.3
+   },
+   "power_cell": {
+    "lon": 59.0,
+    "lat": 30.3
+   }
+  },
+  {
+   "id": "dallol",
+   "name": "Danakil Depression (Dallol)",
+   "country": "Ethiopia",
+   "lat": 14.24,
+   "lon": 40.3,
+   "tags": [
+    "hydrothermal",
+    "evaporite",
+    "barren",
+    "volcanic"
+   ],
+   "is_known_analog": false,
+   "access_tier": 3,
+   "description": "Hyperacid, hypersaline hydrothermal field below sea level; tests the limits of habitability.",
+   "citation_url": "https://en.wikipedia.org/wiki/Dallol_(hydrothermal_system)",
+   "features": {
+    "t2m_c": 25.96,
+    "t2m_min_c": 11.26,
+    "t2m_max_c": 40.27,
+    "t2m_range_c": 11.94,
+    "precip_mm_yr": 449.0,
+    "uv_mean": 2.1,
+    "uv_peak": 2.56,
+    "ps_kpa": 89.53,
+    "ws10m": 3.51,
+    "elevation_m": 1063.0,
+    "abs_lat": 14.24
+   },
+   "power_cell": {
+    "lon": 40.3,
+    "lat": 14.24
+   }
+  },
+  {
+   "id": "erta_ale",
+   "name": "Erta Ale",
+   "country": "Ethiopia",
+   "lat": 13.6,
+   "lon": 40.67,
+   "tags": [
+    "basalt",
+    "volcanic",
+    "barren",
+    "crater"
+   ],
+   "is_known_analog": false,
+   "access_tier": 3,
+   "description": "Active basaltic shield volcano with a persistent lava lake in the Afar desert.",
+   "citation_url": "https://en.wikipedia.org/wiki/Erta_Ale",
+   "features": {
+    "t2m_c": 33.65,
+    "t2m_min_c": 17.35,
+    "t2m_max_c": 47.9,
+    "t2m_range_c": 12.57,
+    "precip_mm_yr": 296.0,
+    "uv_mean": 2.14,
+    "uv_peak": 2.6,
+    "ps_kpa": 99.73,
+    "ws10m": 3.8,
+    "elevation_m": 91.0,
+    "abs_lat": 13.6
+   },
+   "power_cell": {
+    "lon": 40.67,
+    "lat": 13.6
+   }
+  },
+  {
+   "id": "namib",
+   "name": "Namib Desert (Gobabeb)",
+   "country": "Namibia",
+   "lat": -23.56,
+   "lon": 15.04,
+   "tags": [
+    "barren",
+    "sparse_vegetation"
+   ],
+   "is_known_analog": false,
+   "access_tier": 2,
+   "description": "Ancient coastal fog desert with gravel plains and large dune fields.",
+   "citation_url": "https://en.wikipedia.org/wiki/Namib",
+   "features": {
+    "t2m_c": 21.95,
+    "t2m_min_c": 3.46,
+    "t2m_max_c": 43.83,
+    "t2m_range_c": 15.32,
+    "precip_mm_yr": 66.0,
+    "uv_mean": 2.24,
+    "uv_peak": 3.45,
+    "ps_kpa": 96.29,
+    "ws10m": 4.0,
+    "elevation_m": 443.0,
+    "abs_lat": 23.56
+   },
+   "power_cell": {
+    "lon": 15.04,
+    "lat": -23.56
+   }
+  },
+  {
+   "id": "gobi",
+   "name": "Gobi Desert (Flaming Cliffs)",
+   "country": "Mongolia",
+   "lat": 44.13,
+   "lon": 103.73,
+   "tags": [
+    "barren",
+    "sparse_vegetation",
+    "sediment",
+    "iron_rich"
+   ],
+   "is_known_analog": false,
+   "access_tier": 2,
+   "description": "Cold, windy desert with red Cretaceous sediments and wide seasonal temperature swings.",
+   "citation_url": "https://en.wikipedia.org/wiki/Flaming_Cliffs",
+   "features": {
+    "t2m_c": 4.91,
+    "t2m_min_c": -28.49,
+    "t2m_max_c": 39.69,
+    "t2m_range_c": 12.45,
+    "precip_mm_yr": 120.0,
+    "uv_mean": 1.01,
+    "uv_peak": 1.96,
+    "ps_kpa": 85.18,
+    "ws10m": 4.8,
+    "elevation_m": 1472.0,
+    "abs_lat": 44.13
+   },
+   "power_cell": {
+    "lon": 103.73,
+    "lat": 44.13
+   }
+  },
+  {
+   "id": "puna_antofalla",
+   "name": "Puna de Atacama (Antofalla)",
+   "country": "Argentina",
+   "lat": -25.6,
+   "lon": -67.7,
+   "tags": [
+    "volcanic",
+    "basalt",
+    "evaporite",
+    "barren"
+   ],
+   "is_known_analog": false,
+   "access_tier": 3,
+   "description": "High volcanic plateau with salars and basaltic cones, intense UV and low pressure.",
+   "citation_url": "https://en.wikipedia.org/wiki/Puna_de_Atacama",
+   "features": {
+    "t2m_c": 3.59,
+    "t2m_min_c": -20.85,
+    "t2m_max_c": 23.19,
+    "t2m_range_c": 16.13,
+    "precip_mm_yr": 599.0,
+    "uv_mean": 2.82,
+    "uv_peak": 4.33,
+    "ps_kpa": 61.61,
+    "ws10m": 3.89,
+    "elevation_m": 4172.0,
+    "abs_lat": 25.6
+   },
+   "power_cell": {
+    "lon": -67.7,
+    "lat": -25.6
+   }
+  },
+  {
+   "id": "salar_uyuni",
+   "name": "Salar de Uyuni",
+   "country": "Bolivia",
+   "lat": -20.13,
+   "lon": -67.49,
+   "tags": [
+    "evaporite",
+    "paleolake",
+    "barren"
+   ],
+   "is_known_analog": false,
+   "access_tier": 2,
+   "description": "World's largest salt flat, the remnant of Pleistocene lakes on the Altiplano.",
+   "citation_url": "https://en.wikipedia.org/wiki/Salar_de_Uyuni",
+   "features": {
+    "t2m_c": 7.48,
+    "t2m_min_c": -14.47,
+    "t2m_max_c": 25.07,
+    "t2m_range_c": 16.59,
+    "precip_mm_yr": 332.0,
+    "uv_mean": 2.4,
+    "uv_peak": 3.52,
+    "ps_kpa": 65.44,
+    "ws10m": 2.82,
+    "elevation_m": 3692.0,
+    "abs_lat": 20.13
+   },
+   "power_cell": {
+    "lon": -67.49,
+    "lat": -20.13
+   }
+  },
+  {
+   "id": "licancabur",
+   "name": "Licancabur (Altiplano)",
+   "country": "Bolivia",
+   "lat": -22.83,
+   "lon": -67.88,
+   "tags": [
+    "volcanic",
+    "evaporite",
+    "paleolake",
+    "barren"
+   ],
+   "is_known_analog": false,
+   "access_tier": 3,
+   "description": "5,900 m volcano with one of the highest lakes on Earth; extreme UV and low pressure.",
+   "citation_url": "https://en.wikipedia.org/wiki/Licancabur",
+   "features": {
+    "t2m_c": 13.57,
+    "t2m_min_c": -6.74,
+    "t2m_max_c": 32.83,
+    "t2m_range_c": 17.32,
+    "precip_mm_yr": 29.0,
+    "uv_mean": 2.85,
+    "uv_peak": 4.03,
+    "ps_kpa": 72.14,
+    "ws10m": 3.87,
+    "elevation_m": 2881.0,
+    "abs_lat": 22.83
+   },
+   "power_cell": {
+    "lon": -67.88,
+    "lat": -22.83
+   }
+  },
+  {
+   "id": "kerguelen",
+   "name": "Kerguelen Islands",
+   "country": "France",
+   "lat": -49.35,
+   "lon": 69.5,
+   "tags": [
+    "basalt",
+    "volcanic",
+    "glacier",
+    "sparse_vegetation"
+   ],
+   "is_known_analog": false,
+   "access_tier": 3,
+   "description": "Remote, windswept sub-Antarctic flood-basalt archipelago.",
+   "citation_url": "https://en.wikipedia.org/wiki/Kerguelen_Islands",
+   "features": {
+    "t2m_c": 1.86,
+    "t2m_min_c": -11.62,
+    "t2m_max_c": 13.42,
+    "t2m_range_c": 3.41,
+    "precip_mm_yr": 1256.0,
+    "uv_mean": 0.7,
+    "uv_peak": 1.67,
+    "ps_kpa": 97.44,
+    "ws10m": 10.92,
+    "elevation_m": 240.0,
+    "abs_lat": 49.35
+   },
+   "power_cell": {
+    "lon": 69.5,
+    "lat": -49.35
+   }
+  },
+  {
+   "id": "ross_erebus",
+   "name": "Ross Island (Mount Erebus)",
+   "country": "Antarctica",
+   "lat": -77.53,
+   "lon": 167.15,
+   "tags": [
+    "volcanic",
+    "permafrost",
+    "glacier",
+    "cave",
+    "barren"
+   ],
+   "is_known_analog": false,
+   "access_tier": 3,
+   "description": "Polar volcano with fumarolic ice caves, permafrost and an active lava lake.",
+   "citation_url": "https://en.wikipedia.org/wiki/Mount_Erebus",
+   "features": {
+    "t2m_c": -19.42,
+    "t2m_min_c": -42.21,
+    "t2m_max_c": 0.39,
+    "t2m_range_c": 4.4,
+    "precip_mm_yr": 161.0,
+    "uv_mean": 0.53,
+    "uv_peak": 1.84,
+    "ps_kpa": 96.03,
+    "ws10m": 4.77,
+    "elevation_m": 229.0,
+    "abs_lat": 77.53
+   },
+   "power_cell": {
+    "lon": 167.15,
+    "lat": -77.53
+   }
+  },
+  {
+   "id": "kangerlussuaq",
+   "name": "Greenland ice-free margin (Kangerlussuaq)",
+   "country": "Greenland",
+   "lat": 67.01,
+   "lon": -50.69,
+   "tags": [
+    "permafrost",
+    "sparse_vegetation",
+    "glacier",
+    "sediment"
+   ],
+   "is_known_analog": false,
+   "access_tier": 2,
+   "description": "Ice-free terrain at the edge of the Greenland ice sheet with permafrost and glacial outwash.",
+   "citation_url": "https://en.wikipedia.org/wiki/Kangerlussuaq",
+   "features": {
+    "t2m_c": -6.36,
+    "t2m_min_c": -40.67,
+    "t2m_max_c": 20.68,
+    "t2m_range_c": 7.4,
+    "precip_mm_yr": 416.0,
+    "uv_mean": 0.4,
+    "uv_peak": 1.12,
+    "ps_kpa": 94.9,
+    "ws10m": 3.61,
+    "elevation_m": 481.0,
+    "abs_lat": 67.01
+   },
+   "power_cell": {
+    "lon": -50.69,
+    "lat": 67.01
+   }
+  },
+  {
+   "id": "tolbachik",
+   "name": "Kamchatka (Tolbachik)",
+   "country": "Russia",
+   "lat": 55.83,
+   "lon": 160.33,
+   "tags": [
+    "basalt",
+    "volcanic",
+    "tephra",
+    "barren",
+    "lava_tube",
+    "permafrost"
+   ],
+   "is_known_analog": false,
+   "access_tier": 3,
+   "description": "Fresh basaltic lava fields and tephra plains with lava tubes from the 2012–13 eruption.",
+   "citation_url": "https://en.wikipedia.org/wiki/Tolbachik",
+   "features": {
+    "t2m_c": -5.47,
+    "t2m_min_c": -39.97,
+    "t2m_max_c": 25.42,
+    "t2m_range_c": 6.91,
+    "precip_mm_yr": 1894.0,
+    "uv_mean": 0.51,
+    "uv_peak": 1.25,
+    "ps_kpa": 89.29,
+    "ws10m": 3.16,
+    "elevation_m": 992.0,
+    "abs_lat": 55.83
+   },
+   "power_cell": {
+    "lon": 160.33,
+    "lat": 55.83
+   }
+  },
+  {
+   "id": "undara",
+   "name": "Undara lava tubes",
+   "country": "Australia",
+   "lat": -18.2,
+   "lon": 144.6,
+   "tags": [
+    "lava_tube",
+    "basalt",
+    "volcanic"
+   ],
+   "is_known_analog": false,
+   "access_tier": 2,
+   "description": "Among the longest lava tube systems on Earth, formed ~190,000 years ago.",
+   "citation_url": "https://en.wikipedia.org/wiki/Undara_Volcanic_National_Park",
+   "features": {
+    "t2m_c": 23.55,
+    "t2m_min_c": 3.31,
+    "t2m_max_c": 42.83,
+    "t2m_range_c": 13.59,
+    "precip_mm_yr": 843.0,
+    "uv_mean": 2.25,
+    "uv_peak": 2.9,
+    "ps_kpa": 95.15,
+    "ws10m": 4.65,
+    "elevation_m": 538.0,
+    "abs_lat": 18.2
+   },
+   "power_cell": {
+    "lon": 144.6,
+    "lat": -18.2
+   }
+  },
+  {
+   "id": "pilbara",
+   "name": "Pilbara (Dresser Formation)",
+   "country": "Australia",
+   "lat": -21.15,
+   "lon": 119.4,
+   "tags": [
+    "hydrothermal",
+    "sediment",
+    "iron_rich",
+    "barren"
+   ],
+   "is_known_analog": false,
+   "access_tier": 2,
+   "description": "3.5-billion-year-old hydrothermal sediments with some of Earth's oldest evidence of life.",
+   "citation_url": "https://en.wikipedia.org/wiki/Dresser_Formation",
+   "features": {
+    "t2m_c": 27.5,
+    "t2m_min_c": 6.49,
+    "t2m_max_c": 48.95,
+    "t2m_range_c": 15.63,
+    "precip_mm_yr": 405.0,
+    "uv_mean": 2.29,
+    "uv_peak": 3.26,
+    "ps_kpa": 99.11,
+    "ws10m": 4.51,
+    "elevation_m": 175.0,
+    "abs_lat": 21.15
+   },
+   "power_cell": {
+    "lon": 119.4,
+    "lat": -21.15
+   }
+  },
+  {
+   "id": "kati_thanda",
+   "name": "Kati Thanda–Lake Eyre",
+   "country": "Australia",
+   "lat": -28.4,
+   "lon": 137.3,
+   "tags": [
+    "evaporite",
+    "paleolake",
+    "barren"
+   ],
+   "is_known_analog": false,
+   "access_tier": 2,
+   "description": "Australia's largest salt lake, usually dry, in the arid interior.",
+   "citation_url": "https://en.wikipedia.org/wiki/Kati_Thanda%E2%80%93Lake_Eyre",
+   "features": {
+    "t2m_c": 22.37,
+    "t2m_min_c": 0.64,
+    "t2m_max_c": 48.25,
+    "t2m_range_c": 13.93,
+    "precip_mm_yr": 131.0,
+    "uv_mean": 1.82,
+    "uv_peak": 3.1,
+    "ps_kpa": 101.72,
+    "ws10m": 4.66,
+    "elevation_m": -8.0,
+    "abs_lat": 28.4
+   },
+   "power_cell": {
+    "lon": 137.3,
+    "lat": -28.4
+   }
+  },
+  {
+   "id": "wolfe_creek",
+   "name": "Wolfe Creek Crater",
+   "country": "Australia",
+   "lat": -19.17,
+   "lon": 127.8,
+   "tags": [
+    "impact_crater",
+    "barren",
+    "sparse_vegetation"
+   ],
+   "is_known_analog": false,
+   "access_tier": 2,
+   "description": "Well-preserved 880 m meteorite crater in the Great Sandy Desert.",
+   "citation_url": "https://en.wikipedia.org/wiki/Wolfe_Creek_Crater",
+   "features": {
+    "t2m_c": 26.61,
+    "t2m_min_c": 3.39,
+    "t2m_max_c": 46.76,
+    "t2m_range_c": 14.41,
+    "precip_mm_yr": 606.0,
+    "uv_mean": 2.31,
+    "uv_peak": 3.16,
+    "ps_kpa": 96.79,
+    "ws10m": 4.16,
+    "elevation_m": 382.0,
+    "abs_lat": 19.17
+   },
+   "power_cell": {
+    "lon": 127.8,
+    "lat": -19.17
+   }
+  },
+  {
+   "id": "gosses_bluff",
+   "name": "Gosses Bluff",
+   "country": "Australia",
+   "lat": -23.82,
+   "lon": 132.31,
+   "tags": [
+    "impact_crater",
+    "sparse_vegetation"
+   ],
+   "is_known_analog": false,
+   "access_tier": 2,
+   "description": "Eroded central uplift of a 142-million-year-old impact structure.",
+   "citation_url": "https://en.wikipedia.org/wiki/Gosses_Bluff_crater",
+   "features": {
+    "t2m_c": 21.85,
+    "t2m_min_c": -2.11,
+    "t2m_max_c": 45.91,
+    "t2m_range_c": 15.6,
+    "precip_mm_yr": 263.0,
+    "uv_mean": 2.18,
+    "uv_peak": 3.24,
+    "ps_kpa": 93.44,
+    "ws10m": 4.58,
+    "elevation_m": 712.0,
+    "abs_lat": 23.82
+   },
+   "power_cell": {
+    "lon": 132.31,
+    "lat": -23.82
+   }
+  },
+  {
+   "id": "popigai",
+   "name": "Popigai Crater",
+   "country": "Russia",
+   "lat": 71.65,
+   "lon": 111.18,
+   "tags": [
+    "impact_crater",
+    "permafrost",
+    "ground_ice",
+    "sparse_vegetation"
+   ],
+   "is_known_analog": false,
+   "access_tier": 3,
+   "description": "100 km impact structure in Siberian permafrost, rich in impact diamonds.",
+   "citation_url": "https://en.wikipedia.org/wiki/Popigai_crater",
+   "features": {
+    "t2m_c": -12.42,
+    "t2m_min_c": -62.1,
+    "t2m_max_c": 27.3,
+    "t2m_range_c": 6.35,
+    "precip_mm_yr": 467.0,
+    "uv_mean": 0.35,
+    "uv_peak": 0.98,
+    "ps_kpa": 99.28,
+    "ws10m": 4.36,
+    "elevation_m": 162.0,
+    "abs_lat": 71.65
+   },
+   "power_cell": {
+    "lon": 111.18,
+    "lat": 71.65
+   }
+  },
+  {
+   "id": "elgygytgyn",
+   "name": "Lake El'gygytgyn",
+   "country": "Russia",
+   "lat": 67.5,
+   "lon": 172.08,
+   "tags": [
+    "impact_crater",
+    "permafrost",
+    "sediment",
+    "sparse_vegetation"
+   ],
+   "is_known_analog": false,
+   "access_tier": 3,
+   "description": "3.6-million-year-old Arctic impact crater lake with a continuous sediment record.",
+   "citation_url": "https://en.wikipedia.org/wiki/Lake_El%27gygytgyn",
+   "features": {
+    "t2m_c": -10.74,
+    "t2m_min_c": -46.67,
+    "t2m_max_c": 24.75,
+    "t2m_range_c": 6.44,
+    "precip_mm_yr": 642.0,
+    "uv_mean": 0.37,
+    "uv_peak": 0.99,
+    "ps_kpa": 95.02,
+    "ws10m": 4.59,
+    "elevation_m": 518.0,
+    "abs_lat": 67.5
+   },
+   "power_cell": {
+    "lon": 172.08,
+    "lat": 67.5
+   }
+  },
+  {
+   "id": "pingualuit",
+   "name": "Pingualuit Crater",
+   "country": "Canada",
+   "lat": 61.28,
+   "lon": -73.66,
+   "tags": [
+    "impact_crater",
+    "permafrost",
+    "sediment",
+    "sparse_vegetation"
+   ],
+   "is_known_analog": false,
+   "access_tier": 3,
+   "description": "Young 3.4 km impact crater in the Nunavik tundra.",
+   "citation_url": "https://en.wikipedia.org/wiki/Pingualuit_crater",
+   "features": {
+    "t2m_c": -9.69,
+    "t2m_min_c": -49.09,
+    "t2m_max_c": 23.89,
+    "t2m_range_c": 7.07,
+    "precip_mm_yr": 639.0,
+    "uv_mean": 0.47,
+    "uv_peak": 1.08,
+    "ps_kpa": 95.37,
+    "ws10m": 5.64,
+    "elevation_m": 457.0,
+    "abs_lat": 61.28
+   },
+   "power_cell": {
+    "lon": -73.66,
+    "lat": 61.28
+   }
+  },
+  {
+   "id": "manicouagan",
+   "name": "Manicouagan Crater",
+   "country": "Canada",
+   "lat": 51.38,
+   "lon": -68.7,
+   "tags": [
+    "impact_crater",
+    "anorthosite"
+   ],
+   "is_known_analog": false,
+   "access_tier": 2,
+   "description": "Large impact structure with impact melt over anorthositic target rocks.",
+   "citation_url": "https://en.wikipedia.org/wiki/Manicouagan_Reservoir",
+   "features": {
+    "t2m_c": -2.05,
+    "t2m_min_c": -50.03,
+    "t2m_max_c": 28.84,
+    "t2m_range_c": 9.1,
+    "precip_mm_yr": 1037.0,
+    "uv_mean": 0.62,
+    "uv_peak": 1.36,
+    "ps_kpa": 95.62,
+    "ws10m": 2.79,
+    "elevation_m": 469.0,
+    "abs_lat": 51.38
+   },
+   "power_cell": {
+    "lon": -68.7,
+    "lat": 51.38
+   }
+  },
+  {
+   "id": "mistastin",
+   "name": "Mistastin Lake Crater",
+   "country": "Canada",
+   "lat": 55.88,
+   "lon": -63.3,
+   "tags": [
+    "impact_crater",
+    "anorthosite",
+    "permafrost",
+    "sparse_vegetation"
+   ],
+   "is_known_analog": false,
+   "access_tier": 3,
+   "description": "One of very few terrestrial impact craters in anorthosite, the dominant lunar highland rock.",
+   "citation_url": "https://en.wikipedia.org/wiki/Mistastin_Lake",
+   "features": {
+    "t2m_c": -5.86,
+    "t2m_min_c": -46.56,
+    "t2m_max_c": 25.69,
+    "t2m_range_c": 8.39,
+    "precip_mm_yr": 949.0,
+    "uv_mean": 0.56,
+    "uv_peak": 1.2,
+    "ps_kpa": 95.87,
+    "ws10m": 5.94,
+    "elevation_m": 427.0,
+    "abs_lat": 55.88
+   },
+   "power_cell": {
+    "lon": -63.3,
+    "lat": 55.88
+   }
+  },
+  {
+   "id": "stillwater",
+   "name": "Stillwater Complex",
+   "country": "USA",
+   "lat": 45.4,
+   "lon": -109.9,
+   "tags": [
+    "anorthosite"
+   ],
+   "is_known_analog": false,
+   "access_tier": 1,
+   "description": "Layered intrusion with anorthosite used as feedstock for NASA lunar highland regolith simulants.",
+   "citation_url": "https://en.wikipedia.org/wiki/Stillwater_igneous_complex",
+   "features": {
+    "t2m_c": 3.69,
+    "t2m_min_c": -35.25,
+    "t2m_max_c": 36.21,
+    "t2m_range_c": 11.85,
+    "precip_mm_yr": 664.0,
+    "uv_mean": 1.02,
+    "uv_peak": 2.25,
+    "ps_kpa": 79.82,
+    "ws10m": 4.14,
+    "elevation_m": 2001.0,
+    "abs_lat": 45.4
+   },
+   "power_cell": {
+    "lon": -109.9,
+    "lat": 45.4
+   }
+  },
+  {
+   "id": "merriam",
+   "name": "Merriam Crater cinders",
+   "country": "USA",
+   "lat": 35.33,
+   "lon": -111.28,
+   "tags": [
+    "basalt",
+    "volcanic",
+    "tephra",
+    "crater",
+    "sparse_vegetation"
+   ],
+   "is_known_analog": false,
+   "access_tier": 1,
+   "description": "Basaltic cinder deposit near Flagstaff, source of the JSC-1 lunar regolith simulant.",
+   "citation_url": "https://en.wikipedia.org/wiki/San_Francisco_volcanic_field",
+   "features": {
+    "t2m_c": 13.78,
+    "t2m_min_c": -16.02,
+    "t2m_max_c": 40.98,
+    "t2m_range_c": 15.45,
+    "precip_mm_yr": 339.0,
+    "uv_mean": 1.6,
+    "uv_peak": 2.8,
+    "ps_kpa": 84.07,
+    "ws10m": 3.74,
+    "elevation_m": 1592.0,
+    "abs_lat": 35.33
+   },
+   "power_cell": {
+    "lon": -111.28,
+    "lat": 35.33
+   }
+  },
+  {
+   "id": "lava_beds",
+   "name": "Lava Beds",
+   "country": "USA",
+   "lat": 41.71,
+   "lon": -121.51,
+   "tags": [
+    "lava_tube",
+    "basalt",
+    "volcanic",
+    "sparse_vegetation"
+   ],
+   "is_known_analog": false,
+   "access_tier": 1,
+   "description": "More than 700 lava tube caves, several with perennial ice.",
+   "citation_url": "https://en.wikipedia.org/wiki/Lava_Beds_National_Monument",
+   "features": {
+    "t2m_c": 8.83,
+    "t2m_min_c": -23.88,
+    "t2m_max_c": 39.37,
+    "t2m_range_c": 13.51,
+    "precip_mm_yr": 675.0,
+    "uv_mean": 1.24,
+    "uv_peak": 2.54,
+    "ps_kpa": 85.56,
+    "ws10m": 3.17,
+    "elevation_m": 1447.0,
+    "abs_lat": 41.71
+   },
+   "power_cell": {
+    "lon": -121.51,
+    "lat": 41.71
+   }
+  },
+  {
+   "id": "el_malpais",
+   "name": "El Malpais",
+   "country": "USA",
+   "lat": 34.9,
+   "lon": -108.1,
+   "tags": [
+    "lava_tube",
+    "basalt",
+    "volcanic",
+    "ground_ice",
+    "sparse_vegetation"
+   ],
+   "is_known_analog": false,
+   "access_tier": 1,
+   "description": "Young basalt flows with lava tubes and ice caves in New Mexico.",
+   "citation_url": "https://en.wikipedia.org/wiki/El_Malpais_National_Monument",
+   "features": {
+    "t2m_c": 10.38,
+    "t2m_min_c": -20.85,
+    "t2m_max_c": 36.73,
+    "t2m_range_c": 14.47,
+    "precip_mm_yr": 288.0,
+    "uv_mean": 1.63,
+    "uv_peak": 2.8,
+    "ps_kpa": 77.82,
+    "ws10m": 4.58,
+    "elevation_m": 2243.0,
+    "abs_lat": 34.9
+   },
+   "power_cell": {
+    "lon": -108.1,
+    "lat": 34.9
+   }
+  },
+  {
+   "id": "jeju",
+   "name": "Jeju lava tubes (Manjanggul)",
+   "country": "South Korea",
+   "lat": 33.53,
+   "lon": 126.77,
+   "tags": [
+    "lava_tube",
+    "basalt",
+    "volcanic"
+   ],
+   "is_known_analog": false,
+   "access_tier": 1,
+   "description": "Large, accessible basaltic lava tube system on a volcanic island.",
+   "citation_url": "https://en.wikipedia.org/wiki/Manjanggul",
+   "features": {
+    "t2m_c": 16.34,
+    "t2m_min_c": -2.21,
+    "t2m_max_c": 32.67,
+    "t2m_range_c": 3.49,
+    "precip_mm_yr": 1628.0,
+    "uv_mean": 1.05,
+    "uv_peak": 1.75,
+    "ps_kpa": 101.02,
+    "ws10m": 6.19,
+    "elevation_m": 47.0,
+    "abs_lat": 33.53
+   },
+   "power_cell": {
+    "lon": 126.77,
+    "lat": 33.53
+   }
+  },
+  {
+   "id": "harrat_khaybar",
+   "name": "Harrat Khaybar",
+   "country": "Saudi Arabia",
+   "lat": 25.5,
+   "lon": 39.9,
+   "tags": [
+    "basalt",
+    "volcanic",
+    "lava_tube",
+    "barren",
+    "crater"
+   ],
+   "is_known_analog": false,
+   "access_tier": 2,
+   "description": "Arid basaltic lava field with cinder cones and lava tubes such as Umm Jirsan.",
+   "citation_url": "https://en.wikipedia.org/wiki/Harrat_Khaybar",
+   "features": {
+    "t2m_c": 22.95,
+    "t2m_min_c": -5.75,
+    "t2m_max_c": 43.76,
+    "t2m_range_c": 15.8,
+    "precip_mm_yr": 26.0,
+    "uv_mean": 1.93,
+    "uv_peak": 2.75,
+    "ps_kpa": 86.97,
+    "ws10m": 5.06,
+    "elevation_m": 1304.0,
+    "abs_lat": 25.5
+   },
+   "power_cell": {
+    "lon": 39.9,
+    "lat": 25.5
+   }
+  },
+  {
+   "id": "rub_al_khali",
+   "name": "Rub' al Khali",
+   "country": "Saudi Arabia",
+   "lat": 20.0,
+   "lon": 50.0,
+   "tags": [
+    "barren",
+    "hyperarid"
+   ],
+   "is_known_analog": false,
+   "access_tier": 3,
+   "description": "The largest continuous sand desert on Earth.",
+   "citation_url": "https://en.wikipedia.org/wiki/Rub%27_al_Khali",
+   "features": {
+    "t2m_c": 29.1,
+    "t2m_min_c": 2.43,
+    "t2m_max_c": 48.54,
+    "t2m_range_c": 14.33,
+    "precip_mm_yr": 11.0,
+    "uv_mean": 1.98,
+    "uv_peak": 2.44,
+    "ps_kpa": 97.79,
+    "ws10m": 3.9,
+    "elevation_m": 273.0,
+    "abs_lat": 20.0
+   },
+   "power_cell": {
+    "lon": 50.0,
+    "lat": 20.0
+   }
+  },
+  {
+   "id": "emi_koussi",
+   "name": "Tibesti (Emi Koussi)",
+   "country": "Chad",
+   "lat": 19.8,
+   "lon": 18.55,
+   "tags": [
+    "basalt",
+    "volcanic",
+    "crater",
+    "barren"
+   ],
+   "is_known_analog": false,
+   "access_tier": 3,
+   "description": "Large shield volcano with a summit caldera in the central Sahara.",
+   "citation_url": "https://en.wikipedia.org/wiki/Emi_Koussi",
+   "features": {
+    "t2m_c": 21.86,
+    "t2m_min_c": -1.52,
+    "t2m_max_c": 40.6,
+    "t2m_range_c": 15.1,
+    "precip_mm_yr": 15.0,
+    "uv_mean": 2.25,
+    "uv_peak": 2.74,
+    "ps_kpa": 87.08,
+    "ws10m": 4.38,
+    "elevation_m": 1324.0,
+    "abs_lat": 19.8
+   },
+   "power_cell": {
+    "lon": 18.55,
+    "lat": 19.8
+   }
+  },
+  {
+   "id": "kamil",
+   "name": "Kamil Crater",
+   "country": "Egypt",
+   "lat": 22.02,
+   "lon": 26.09,
+   "tags": [
+    "impact_crater",
+    "barren"
+   ],
+   "is_known_analog": false,
+   "access_tier": 3,
+   "description": "Pristine 45 m iron-meteorite crater in the hyperarid Western Desert.",
+   "citation_url": "https://en.wikipedia.org/wiki/Kamil_crater",
+   "features": {
+    "t2m_c": 22.31,
+    "t2m_min_c": -1.77,
+    "t2m_max_c": 43.89,
+    "t2m_range_c": 15.81,
+    "precip_mm_yr": 0.0,
+    "uv_mean": 2.2,
+    "uv_peak": 2.91,
+    "ps_kpa": 94.62,
+    "ws10m": 3.86,
+    "elevation_m": 597.0,
+    "abs_lat": 22.02
+   },
+   "power_cell": {
+    "lon": 26.09,
+    "lat": 22.02
+   }
+  },
+  {
+   "id": "lop_nur",
+   "name": "Lop Nur",
+   "country": "China",
+   "lat": 40.2,
+   "lon": 90.2,
+   "tags": [
+    "evaporite",
+    "paleolake",
+    "barren"
+   ],
+   "is_known_analog": false,
+   "access_tier": 3,
+   "description": "Dried salt lake with yardangs in the Tarim Basin; one of the driest places in Asia.",
+   "citation_url": "https://en.wikipedia.org/wiki/Lop_Nur",
+   "features": {
+    "t2m_c": 13.64,
+    "t2m_min_c": -19.22,
+    "t2m_max_c": 46.49,
+    "t2m_range_c": 12.33,
+    "precip_mm_yr": 40.0,
+    "uv_mean": 1.12,
+    "uv_peak": 2.1,
+    "ps_kpa": 92.16,
+    "ws10m": 3.94,
+    "elevation_m": 819.0,
+    "abs_lat": 40.2
+   },
+   "power_cell": {
+    "lon": 90.2,
+    "lat": 40.2
+   }
+  },
+  {
+   "id": "ngari",
+   "name": "Ngari (western Tibet)",
+   "country": "China",
+   "lat": 32.5,
+   "lon": 80.1,
+   "tags": [
+    "permafrost",
+    "evaporite",
+    "paleolake",
+    "sparse_vegetation",
+    "barren"
+   ],
+   "is_known_analog": false,
+   "access_tier": 2,
+   "description": "High, cold, dry plateau with saline lakes and periglacial terrain.",
+   "citation_url": "https://en.wikipedia.org/wiki/Ngari_Prefecture",
+   "features": {
+    "t2m_c": -3.21,
+    "t2m_min_c": -30.17,
+    "t2m_max_c": 23.29,
+    "t2m_range_c": 13.96,
+    "precip_mm_yr": 91.0,
+    "uv_mean": 2.01,
+    "uv_peak": 3.21,
+    "ps_kpa": 55.76,
+    "ws10m": 4.12,
+    "elevation_m": 4917.0,
+    "abs_lat": 32.5
+   },
+   "power_cell": {
+    "lon": 80.1,
+    "lat": 32.5
+   }
+  },
+  {
+   "id": "axel_heiberg",
+   "name": "Axel Heiberg Island",
+   "country": "Canada",
+   "lat": 79.4,
+   "lon": -90.8,
+   "tags": [
+    "permafrost",
+    "ground_ice",
+    "evaporite",
+    "barren",
+    "glacier"
+   ],
+   "is_known_analog": false,
+   "access_tier": 3,
+   "description": "Perennial cold saline springs flowing through thick permafrost.",
+   "citation_url": "https://en.wikipedia.org/wiki/Axel_Heiberg_Island",
+   "features": {
+    "t2m_c": -18.27,
+    "t2m_min_c": -50.46,
+    "t2m_max_c": 11.39,
+    "t2m_range_c": 4.13,
+    "precip_mm_yr": 299.0,
+    "uv_mean": 0.32,
+    "uv_peak": 1.18,
+    "ps_kpa": 91.74,
+    "ws10m": 2.67,
+    "elevation_m": 764.0,
+    "abs_lat": 79.4
+   },
+   "power_cell": {
+    "lon": -90.8,
+    "lat": 79.4
+   }
+  },
+  {
+   "id": "allan_hills",
+   "name": "Allan Hills",
+   "country": "Antarctica",
+   "lat": -76.7,
+   "lon": 159.7,
+   "tags": [
+    "ground_ice",
+    "glacier",
+    "barren",
+    "permafrost"
+   ],
+   "is_known_analog": false,
+   "access_tier": 3,
+   "description": "Blue-ice field where Martian meteorite ALH84001 was found.",
+   "citation_url": "https://en.wikipedia.org/wiki/Allan_Hills",
+   "features": {
+    "t2m_c": -29.82,
+    "t2m_min_c": -55.07,
+    "t2m_max_c": -7.31,
+    "t2m_range_c": 5.34,
+    "precip_mm_yr": 113.0,
+    "uv_mean": 0.66,
+    "uv_peak": 2.3,
+    "ps_kpa": 80.34,
+    "ws10m": 10.3,
+    "elevation_m": 1570.0,
+    "abs_lat": 76.7
+   },
+   "power_cell": {
+    "lon": 159.7,
+    "lat": -76.7
+   }
+  },
+  {
+   "id": "ojos_del_salado",
+   "name": "Ojos del Salado",
+   "country": "Chile",
+   "lat": -27.11,
+   "lon": -68.54,
+   "tags": [
+    "volcanic",
+    "permafrost",
+    "barren"
+   ],
+   "is_known_analog": false,
+   "access_tier": 3,
+   "description": "The highest volcano on Earth; dry, cold, low-pressure summit region with permafrost.",
+   "citation_url": "https://en.wikipedia.org/wiki/Ojos_del_Salado",
+   "features": {
+    "t2m_c": -2.79,
+    "t2m_min_c": -27.23,
+    "t2m_max_c": 18.54,
+    "t2m_range_c": 14.15,
+    "precip_mm_yr": 219.0,
+    "uv_mean": 2.57,
+    "uv_peak": 4.16,
+    "ps_kpa": 56.96,
+    "ws10m": 5.42,
+    "elevation_m": 4810.0,
+    "abs_lat": 27.11
+   },
+   "power_cell": {
+    "lon": -68.54,
+    "lat": -27.11
+   }
+  },
+  {
+   "id": "kilimanjaro",
+   "name": "Kilimanjaro summit",
+   "country": "Tanzania",
+   "lat": -3.07,
+   "lon": 37.35,
+   "tags": [
+    "volcanic",
+    "glacier",
+    "barren"
+   ],
+   "is_known_analog": false,
+   "access_tier": 2,
+   "description": "Equatorial volcanic summit above 5,800 m with low pressure and intense UV.",
+   "citation_url": "https://en.wikipedia.org/wiki/Mount_Kilimanjaro",
+   "features": {
+    "t2m_c": 17.47,
+    "t2m_min_c": 6.85,
+    "t2m_max_c": 30.88,
+    "t2m_range_c": 10.75,
+    "precip_mm_yr": 938.0,
+    "uv_mean": 2.22,
+    "uv_peak": 2.75,
+    "ps_kpa": 82.05,
+    "ws10m": 3.86,
+    "elevation_m": 1843.0,
+    "abs_lat": 3.07
+   },
+   "power_cell": {
+    "lon": 37.35,
+    "lat": -3.07
+   }
+  },
+  {
+   "id": "lac_assal",
+   "name": "Lac Assal",
+   "country": "Djibouti",
+   "lat": 11.65,
+   "lon": 42.41,
+   "tags": [
+    "evaporite",
+    "volcanic",
+    "basalt",
+    "barren"
+   ],
+   "is_known_analog": false,
+   "access_tier": 2,
+   "description": "Hypersaline lake in basaltic rift terrain, 155 m below sea level.",
+   "citation_url": "https://en.wikipedia.org/wiki/Lake_Assal_(Djibouti)",
+   "features": {
+    "t2m_c": 28.61,
+    "t2m_min_c": 12.59,
+    "t2m_max_c": 43.74,
+    "t2m_range_c": 11.54,
+    "precip_mm_yr": 292.0,
+    "uv_mean": 2.25,
+    "uv_peak": 2.63,
+    "ps_kpa": 95.92,
+    "ws10m": 4.98,
+    "elevation_m": 446.0,
+    "abs_lat": 11.65
+   },
+   "power_cell": {
+    "lon": 42.41,
+    "lat": 11.65
+   }
+  },
+  {
+   "id": "wadi_rum",
+   "name": "Wadi Rum",
+   "country": "Jordan",
+   "lat": 29.58,
+   "lon": 35.42,
+   "tags": [
+    "barren",
+    "sediment",
+    "iron_rich"
+   ],
+   "is_known_analog": false,
+   "access_tier": 1,
+   "description": "Red sandstone desert valleys often used to depict Mars on film.",
+   "citation_url": "https://en.wikipedia.org/wiki/Wadi_Rum",
+   "features": {
+    "t2m_c": 18.12,
+    "t2m_min_c": -5.6,
+    "t2m_max_c": 43.32,
+    "t2m_range_c": 16.16,
+    "precip_mm_yr": 40.0,
+    "uv_mean": 1.78,
+    "uv_peak": 2.78,
+    "ps_kpa": 89.34,
+    "ws10m": 3.92,
+    "elevation_m": 1076.0,
+    "abs_lat": 29.58
+   },
+   "power_cell": {
+    "lon": 35.42,
+    "lat": 29.58
+   }
+  },
+  {
+   "id": "kau_desert",
+   "name": "Ka'u Desert (Kilauea)",
+   "country": "USA",
+   "lat": 19.35,
+   "lon": -155.35,
+   "tags": [
+    "basalt",
+    "volcanic",
+    "tephra",
+    "barren",
+    "lava_tube"
+   ],
+   "is_known_analog": false,
+   "access_tier": 1,
+   "description": "Barren basalt and tephra fields downwind of Kilauea's acid gas plume.",
+   "citation_url": "https://en.wikipedia.org/wiki/Ka%CA%BB%C5%AB_Desert",
+   "features": {
+    "t2m_c": 18.18,
+    "t2m_min_c": 7.96,
+    "t2m_max_c": 28.49,
+    "t2m_range_c": 7.19,
+    "precip_mm_yr": 1814.0,
+    "uv_mean": 1.98,
+    "uv_peak": 2.55,
+    "ps_kpa": 89.05,
+    "ws10m": 2.89,
+    "elevation_m": 1145.0,
+    "abs_lat": 19.35
+   },
+   "power_cell": {
+    "lon": -155.35,
+    "lat": 19.35
+   }
+  },
+  {
+   "id": "fernandina",
+   "name": "Fernandina Island",
+   "country": "Ecuador",
+   "lat": -0.37,
+   "lon": -91.55,
+   "tags": [
+    "basalt",
+    "volcanic",
+    "barren",
+    "lava_tube"
+   ],
+   "is_known_analog": false,
+   "access_tier": 3,
+   "description": "Young, active basaltic shield volcano in the Galápagos.",
+   "citation_url": "https://en.wikipedia.org/wiki/Fernandina_Island",
+   "features": {
+    "t2m_c": 24.47,
+    "t2m_min_c": 17.18,
+    "t2m_max_c": 31.98,
+    "t2m_range_c": 4.45,
+    "precip_mm_yr": 277.0,
+    "uv_mean": 2.43,
+    "uv_peak": 2.79,
+    "ps_kpa": 99.77,
+    "ws10m": 3.9,
+    "elevation_m": 120.0,
+    "abs_lat": 0.37
+   },
+   "power_cell": {
+    "lon": -91.55,
+    "lat": -0.37
+   }
+  },
+  {
+   "id": "salar_atacama",
+   "name": "Salar de Atacama",
+   "country": "Chile",
+   "lat": -23.5,
+   "lon": -68.25,
+   "tags": [
+    "evaporite",
+    "paleolake",
+    "barren"
+   ],
+   "is_known_analog": false,
+   "access_tier": 2,
+   "description": "Large salt flat on the edge of the hyperarid Atacama.",
+   "citation_url": "https://en.wikipedia.org/wiki/Salar_de_Atacama",
+   "features": {
+    "t2m_c": 14.47,
+    "t2m_min_c": -6.31,
+    "t2m_max_c": 33.8,
+    "t2m_range_c": 17.39,
+    "precip_mm_yr": 44.0,
+    "uv_mean": 2.64,
+    "uv_peak": 3.93,
+    "ps_kpa": 73.97,
+    "ws10m": 3.63,
+    "elevation_m": 2677.0,
+    "abs_lat": 23.5
+   },
+   "power_cell": {
+    "lon": -68.25,
+    "lat": -23.5
+   }
+  },
+  {
+   "id": "batagaika",
+   "name": "Batagaika Crater",
+   "country": "Russia",
+   "lat": 67.58,
+   "lon": 134.77,
+   "tags": [
+    "permafrost",
+    "ground_ice",
+    "sparse_vegetation"
+   ],
+   "is_known_analog": false,
+   "access_tier": 3,
+   "description": "Huge thaw slump exposing hundreds of thousands of years of Siberian ground ice.",
+   "citation_url": "https://en.wikipedia.org/wiki/Batagaika_crater",
+   "features": {
+    "t2m_c": -12.66,
+    "t2m_min_c": -58.35,
+    "t2m_max_c": 31.52,
+    "t2m_range_c": 8.0,
+    "precip_mm_yr": 358.0,
+    "uv_mean": 0.39,
+    "uv_peak": 1.11,
+    "ps_kpa": 97.67,
+    "ws10m": 2.07,
+    "elevation_m": 304.0,
+    "abs_lat": 67.58
+   },
+   "power_cell": {
+    "lon": 134.77,
+    "lat": 67.58
+   }
+  },
+  {
+   "id": "pinacate",
+   "name": "Pinacate volcanic field",
+   "country": "Mexico",
+   "lat": 31.77,
+   "lon": -113.5,
+   "tags": [
+    "basalt",
+    "volcanic",
+    "crater",
+    "barren",
+    "sparse_vegetation"
+   ],
+   "is_known_analog": false,
+   "access_tier": 1,
+   "description": "Basaltic field with large maar craters in the Sonoran Desert.",
+   "citation_url": "https://en.wikipedia.org/wiki/Pinacate_Peaks",
+   "features": {
+    "t2m_c": 22.48,
+    "t2m_min_c": -3.73,
+    "t2m_max_c": 48.47,
+    "t2m_range_c": 14.21,
+    "precip_mm_yr": 139.0,
+    "uv_mean": 1.7,
+    "uv_peak": 2.72,
+    "ps_kpa": 98.95,
+    "ws10m": 3.68,
+    "elevation_m": 198.0,
+    "abs_lat": 31.77
+   },
+   "power_cell": {
+    "lon": -113.5,
+    "lat": 31.77
+   }
+  },
+  {
+   "id": "cuatro_cienegas",
+   "name": "Cuatro Ciénegas",
+   "country": "Mexico",
+   "lat": 26.9,
+   "lon": -102.1,
+   "tags": [
+    "evaporite",
+    "paleolake",
+    "sediment"
+   ],
+   "is_known_analog": false,
+   "access_tier": 1,
+   "description": "Desert basin with gypsum dunes and living stromatolites.",
+   "citation_url": "https://en.wikipedia.org/wiki/Cuatro_Ci%C3%A9negas",
+   "features": {
+    "t2m_c": 20.82,
+    "t2m_min_c": -9.91,
+    "t2m_max_c": 43.29,
+    "t2m_range_c": 14.66,
+    "precip_mm_yr": 380.0,
+    "uv_mean": 1.91,
+    "uv_peak": 2.69,
+    "ps_kpa": 90.68,
+    "ws10m": 3.04,
+    "elevation_m": 962.0,
+    "abs_lat": 26.9
+   },
+   "power_cell": {
+    "lon": -102.1,
+    "lat": 26.9
+   }
+  },
+  {
+   "id": "white_sands",
+   "name": "White Sands",
+   "country": "USA",
+   "lat": 32.88,
+   "lon": -106.33,
+   "tags": [
+    "evaporite",
+    "barren"
+   ],
+   "is_known_analog": false,
+   "access_tier": 1,
+   "description": "The largest gypsum dune field on Earth, like Mars' north-polar gypsum dunes.",
+   "citation_url": "https://en.wikipedia.org/wiki/White_Sands_National_Park",
+   "features": {
+    "t2m_c": 16.33,
+    "t2m_min_c": -15.51,
+    "t2m_max_c": 42.14,
+    "t2m_range_c": 14.44,
+    "precip_mm_yr": 274.0,
+    "uv_mean": 1.71,
+    "uv_peak": 2.8,
+    "ps_kpa": 85.54,
+    "ws10m": 3.39,
+    "elevation_m": 1450.0,
+    "abs_lat": 32.88
+   },
+   "power_cell": {
+    "lon": -106.33,
+    "lat": 32.88
+   }
+  },
+  {
+   "id": "monturaqui",
+   "name": "Monturaqui Crater",
+   "country": "Chile",
+   "lat": -23.93,
+   "lon": -68.26,
+   "tags": [
+    "impact_crater",
+    "barren",
+    "evaporite"
+   ],
+   "is_known_analog": false,
+   "access_tier": 3,
+   "description": "Small impact crater in the hyperarid, high Atacama.",
+   "citation_url": "https://en.wikipedia.org/wiki/Monturaqui_crater",
+   "features": {
+    "t2m_c": 8.83,
+    "t2m_min_c": -11.11,
+    "t2m_max_c": 28.56,
+    "t2m_range_c": 16.63,
+    "precip_mm_yr": 95.0,
+    "uv_mean": 2.64,
+    "uv_peak": 3.93,
+    "ps_kpa": 67.86,
+    "ws10m": 3.71,
+    "elevation_m": 3409.0,
+    "abs_lat": 23.93
+   },
+   "power_cell": {
+    "lon": -68.26,
+    "lat": -23.93
+   }
+  },
+  {
+   "id": "wabar",
+   "name": "Wabar Craters",
+   "country": "Saudi Arabia",
+   "lat": 21.5,
+   "lon": 50.47,
+   "tags": [
+    "impact_crater",
+    "barren"
+   ],
+   "is_known_analog": false,
+   "access_tier": 3,
+   "description": "Iron-meteorite craters in the sand sea of the Rub' al Khali.",
+   "citation_url": "https://en.wikipedia.org/wiki/Wabar_craters",
+   "features": {
+    "t2m_c": 29.17,
+    "t2m_min_c": 2.08,
+    "t2m_max_c": 49.71,
+    "t2m_range_c": 14.35,
+    "precip_mm_yr": 26.0,
+    "uv_mean": 1.9,
+    "uv_peak": 2.39,
+    "ps_kpa": 98.84,
+    "ws10m": 3.82,
+    "elevation_m": 180.0,
+    "abs_lat": 21.5
+   },
+   "power_cell": {
+    "lon": 50.47,
+    "lat": 21.5
+   }
+  },
+  {
+   "id": "hoggar",
+   "name": "Hoggar (Atakor)",
+   "country": "Algeria",
+   "lat": 23.3,
+   "lon": 5.6,
+   "tags": [
+    "basalt",
+    "volcanic",
+    "barren"
+   ],
+   "is_known_analog": false,
+   "access_tier": 3,
+   "description": "Volcanic highland of basalt plateaus and phonolite spires in the central Sahara.",
+   "citation_url": "https://en.wikipedia.org/wiki/Hoggar_Mountains",
+   "features": {
+    "t2m_c": 20.89,
+    "t2m_min_c": -5.33,
+    "t2m_max_c": 39.71,
+    "t2m_range_c": 14.57,
+    "precip_mm_yr": 128.0,
+    "uv_mean": 2.05,
+    "uv_peak": 2.73,
+    "ps_kpa": 84.53,
+    "ws10m": 4.31,
+    "elevation_m": 1575.0,
+    "abs_lat": 23.3
+   },
+   "power_cell": {
+    "lon": 5.6,
+    "lat": 23.3
+   }
+  }
+ ]
+}
